@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
 
-type PlaygroundState = {};
+type PlaygroundState = Record<string, never>;
 
-const usePlaygroundStore = create<PlaygroundState>()(immer(set => ({})));
+export const usePlaygroundStore = create<PlaygroundState>()(() => ({}));

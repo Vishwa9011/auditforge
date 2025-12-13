@@ -1,10 +1,12 @@
 import './index.css';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
+import { ThemeProvider } from 'next-themes';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
+import { Toaster } from './components/ui/sonner';
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -22,7 +24,10 @@ if (!rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
         <StrictMode>
-            <RouterProvider router={router} />
+            <ThemeProvider attribute={'class'} defaultTheme="system" enableSystem={true}>
+                <RouterProvider router={router} />
+                <Toaster />
+            </ThemeProvider>
         </StrictMode>,
     );
 }

@@ -14,7 +14,7 @@ import { navLinks } from '@/constants';
 
 const SidebarLayout = ({ children }: { children: ReactNode }) => {
     return (
-        <SidebarProvider defaultOpen={false}>
+        <SidebarProvider>
             <Sidebar collapsible="icon">
                 <SidebarContent>
                     <SidebarGroup>

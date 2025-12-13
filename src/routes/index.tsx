@@ -1,5 +1,6 @@
-import { CodeEditor } from '@/features/playground/components';
 import { createFileRoute } from '@tanstack/react-router';
+import { FileExplorer, PlaygroundLayout } from '@/features/playground/components';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 export const Route = createFileRoute('/')({
     component: Index,
@@ -7,11 +8,16 @@ export const Route = createFileRoute('/')({
 
 function Index() {
     return (
-        <div className="grid w-full grid-cols-[200px_1fr]">
-            <div className="border-r-2 border-black p-4">File Explorer</div>
-            <div className="h-screen w-full">
-                <CodeEditor />
-            </div>
+        <div className="w-full">
+            <ResizablePanelGroup direction="horizontal">
+                <ResizablePanel defaultSize={20} className="max-w-72">
+                    <FileExplorer />
+                </ResizablePanel>
+                <ResizableHandle />
+                <ResizablePanel defaultSize={80} className="w-full">
+                    <PlaygroundLayout />
+                </ResizablePanel>
+            </ResizablePanelGroup>
         </div>
     );
 }
