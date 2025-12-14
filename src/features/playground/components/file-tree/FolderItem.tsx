@@ -60,6 +60,10 @@ export const FolderItem = memo(function FolderItem({ name, path, children }: Fol
             createFile(path, name);
             toast.success('File created successfully');
         } else if (operationMode === 'create-folder') {
+            if (renderedPathsIndex.has(buildPath(path, name))) {
+                toast.error('A file or folder with this name already exists');
+                throw new Error('A file or folder with this name already exists');
+            }
             createFolder(path, name);
             toast.success('Folder created successfully');
         } else if (operationMode === 'rename') {
