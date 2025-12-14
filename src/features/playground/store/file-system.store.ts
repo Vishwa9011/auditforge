@@ -26,6 +26,7 @@ type FileSystemState = {
     nextIno: Ino;
     activeFile: string | null;
     openFiles: Set<string>; // set of file paths
+    selectedWorkspace: string | null;
 
     selectWorkspace: (name: string) => void;
     allocateIno: () => Ino;
@@ -92,6 +93,7 @@ export const useFileSystem = create<FileSystemState>()(
 
             return {
                 cwd: '/.workspaces/default_workspace',
+                selectedWorkspace: 'default_workspace',
                 fsTree: defaultFsTree,
                 nextIno: computeNextIno(defaultFsTree),
                 activeFile: null,
@@ -122,6 +124,7 @@ export const useFileSystem = create<FileSystemState>()(
                     if (!workspaceNames.includes(name)) return;
                     set(state => {
                         state.cwd = `/.workspaces/${name}`;
+                        state.selectedWorkspace = name;
                     });
                 },
 
@@ -169,7 +172,6 @@ export const useFileSystem = create<FileSystemState>()(
                 },
 
                 deleteNode: path => {
-                    console.log('path: ', path);
                     set(state => {
                         const split = splitPath(path);
                         if (!split) return;

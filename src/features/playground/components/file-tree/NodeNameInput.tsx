@@ -5,10 +5,11 @@ type NodeNameInputProps = {
     isOpen: boolean;
     onBlur: () => void;
     defaultValue?: string;
+    placeholder?: string;
     onSubmit: (name: string) => void;
 };
 
-export function NodeNameInput({ isOpen, onBlur, onSubmit, defaultValue }: NodeNameInputProps) {
+export function NodeNameInput({ isOpen, onBlur, onSubmit, defaultValue, placeholder }: NodeNameInputProps) {
     const [inputValue, setInputValue] = useState(defaultValue || '');
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -26,6 +27,7 @@ export function NodeNameInput({ isOpen, onBlur, onSubmit, defaultValue }: NodeNa
                     maxLength={25}
                     onBlur={onBlur}
                     autoFocus
+                    placeholder={placeholder}
                     value={inputValue}
                     onChange={e => setInputValue(e.target.value)}
                     className="bg-background h-7 px-2 text-sm"

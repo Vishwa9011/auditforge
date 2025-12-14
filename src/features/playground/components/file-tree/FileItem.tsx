@@ -51,7 +51,6 @@ export const FileItem = memo(function FileItem({ path, name, node }: FileItemPro
     };
 
     const onFileClick = () => {
-        console.log('Adding file to open files: ', node);
         openFile(path);
         setActiveFilePath(path);
     };

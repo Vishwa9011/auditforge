@@ -1,17 +1,18 @@
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import { Trash } from 'lucide-react';
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { TriangleAlert, Trash } from 'lucide-react';
 import type { MouseEvent } from 'react';
 import type { InodeMeta } from '../../types';
-import { Button } from '@/components/ui/button';
 
 type DeleteDialogProps = {
     type: InodeMeta['type'];
@@ -21,32 +22,53 @@ type DeleteDialogProps = {
 };
 
 export function DeleteDialog({ type, name, action, onClick }: DeleteDialogProps) {
+    const label = type === 'file' ? 'file' : 'folder';
+
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant={'ghost'} size={'icon-xs'} onClick={onClick}>
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    aria-label={`Delete ${label} ${name}`}
+                    className="text-muted-foreground hover:text-destructive"
+                    onClick={onClick}
+                >
                     <Trash />
                 </Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                        This action cannot be undone. This will permanently delete your file
-                    </DialogDescription>
-                </DialogHeader>
+            </AlertDialogTrigger>
 
-                <DialogFooter>
-                    <DialogClose asChild>
-                        <Button type="button" variant="secondary" className="cursor-pointer">
-                            Close
+            <AlertDialogContent className="sm:max-w-sm">
+                <div className="flex items-start gap-4">
+                    <div className="bg-destructive/10 text-destructive mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-md">
+                        <TriangleAlert className="size-5" />
+                    </div>
+
+                    <AlertDialogHeader className="gap-1 text-left">
+                        <AlertDialogTitle className="leading-6">Delete {label}?</AlertDialogTitle>
+                        <AlertDialogDescription className="leading-5">
+                            This action cannot be undone. This will permanently delete{' '}
+                            <span className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-xs">
+                                {name}
+                            </span>
+                            {type === 'dir' ? ' and all of its contents.' : '.'}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                </div>
+
+                <AlertDialogFooter className="mt-2 flex-col gap-2 sm:flex-col sm:justify-start">
+                    <AlertDialogCancel asChild>
+                        <Button type="button" variant="secondary" className="w-full justify-center">
+                            Cancel
                         </Button>
-                    </DialogClose>
-                    <Button type="submit" onClick={action} className="cursor-pointer">
-                        Yes, delete <code>{name}</code> {type == 'file' ? 'file' : 'folder'}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                    </AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                        <Button type="button" variant="destructive" className="w-full justify-center" onClick={action}>
+                            Delete {label}
+                        </Button>
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     );
 }
