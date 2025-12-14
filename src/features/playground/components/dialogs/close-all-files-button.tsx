@@ -8,7 +8,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { writeFileContent } from '../../lib';
+import { saveAllUnsavedFiles } from '../../lib';
 import { useFileExplorerStore, useFileSystem } from '../../store';
 import { TriangleAlert } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -20,7 +20,6 @@ export function CloseAllFilesButton() {
     const openFilesCount = useFileSystem(state => state.openFiles.size);
     const closeAllFiles = useFileSystem(state => state.closeAllFiles);
 
-    const draftsByIno = useFileExplorerStore(state => state.draftsByIno);
     const unsavedInos = useFileExplorerStore(state => state.unsavedInos);
     const clearUnsaved = useFileExplorerStore(state => state.clearUnsaved);
 
@@ -40,15 +39,9 @@ export function CloseAllFilesButton() {
     };
 
     const saveAllAndClose = async () => {
-        const inos = Array.from(unsavedInos);
         setIsWorking(true);
         try {
-            for (const ino of inos) {
-                const draft = draftsByIno.get(ino);
-                if (!draft) continue;
-                await writeFileContent(ino, draft.content);
-                clearUnsaved(ino);
-            }
+            await saveAllUnsavedFiles();
             closeAllFiles();
             setIsAlertOpen(false);
         } finally {

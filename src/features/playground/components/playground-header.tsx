@@ -8,7 +8,7 @@ import { resolveFilename, resolvePath } from '../store/file-system';
 import { CloseFileButton } from './dialogs/close-file-button';
 import { CloseAllFilesButton } from './dialogs/close-all-files-button';
 import { useSidebarStore } from '../store/sidebar.store';
-import { writeFileContent } from '../lib';
+import { saveAllUnsavedFiles, saveFileByIno } from '../lib';
 
 export function PlaygroundHeader() {
     const [isSaving, setIsSaving] = useState(false);
@@ -19,9 +19,7 @@ export function PlaygroundHeader() {
     const setActiveFile = useFileSystem(state => state.setActiveFile);
     const toggleSidebar = useSidebarStore(state => state.toggleSidebar);
 
-    const draftsByIno = useFileExplorerStore(state => state.draftsByIno);
     const unsavedInos = useFileExplorerStore(state => state.unsavedInos);
-    const clearUnsaved = useFileExplorerStore(state => state.clearUnsaved);
 
     const openFileTabs = useMemo(() => {
         const tabs: Array<InodeMeta & { path: string; name: string }> = [];
@@ -50,30 +48,18 @@ export function PlaygroundHeader() {
 
     const saveActiveFile = async () => {
         if (!activeMeta) return;
-        const draft = draftsByIno.get(activeMeta.ino);
-        if (!draft) return;
-
         setIsSaving(true);
         try {
-            await writeFileContent(activeMeta.ino, draft.content);
-            clearUnsaved(activeMeta.ino);
+            await saveFileByIno(activeMeta.ino);
         } finally {
             setIsSaving(false);
         }
     };
 
     const saveAllFiles = async () => {
-        const inos = Array.from(unsavedInos);
-        if (inos.length === 0) return;
-
         setIsSavingAll(true);
         try {
-            for (const ino of inos) {
-                const draft = draftsByIno.get(ino);
-                if (!draft) continue;
-                await writeFileContent(ino, draft.content);
-                clearUnsaved(ino);
-            }
+            await saveAllUnsavedFiles();
         } finally {
             setIsSavingAll(false);
         }

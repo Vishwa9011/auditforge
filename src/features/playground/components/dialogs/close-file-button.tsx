@@ -12,7 +12,7 @@ import type { InodeMeta } from '../../types';
 import { useFileExplorerStore, useFileSystem } from '../../store';
 import { useToggle } from '../../hooks';
 import { TriangleAlert, X } from 'lucide-react';
-import { writeFileContent } from '../../lib';
+import { saveFileByIno } from '../../lib';
 import { useMemo, useState, type MouseEvent } from 'react';
 import { resolveFilename } from '../../store/file-system';
 
@@ -22,7 +22,6 @@ export function CloseFileButton({ ino, path, name }: CloseFileButtonProps) {
     const [isAlertOpen, setIsAlertOpen] = useToggle(false);
     const [isSaving, setIsSaving] = useState(false);
     const closeFile = useFileSystem(state => state.closeFile);
-    const draftContent = useFileExplorerStore(state => state.draftsByIno.get(ino)?.content || '');
     const hasUnsavedChanges = useFileExplorerStore(state => state.unsavedInos.has(ino));
 
     const clearUnsaved = useFileExplorerStore(state => state.clearUnsaved);
@@ -42,8 +41,7 @@ export function CloseFileButton({ ino, path, name }: CloseFileButtonProps) {
 
         setIsSaving(true);
         try {
-            await writeFileContent(ino, draftContent);
-            clearUnsaved(ino);
+            await saveFileByIno(ino);
             closeFile(path);
             setIsAlertOpen(false);
         } finally {
