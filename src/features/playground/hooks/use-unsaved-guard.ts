@@ -1,0 +1,10 @@
+import { useFileExplorerStore } from '../store';
+import { usePreventUnload } from './use-prevent-unload';
+
+export function useUnsavedGuard() {
+    const unsavedInos = useFileExplorerStore(state => state.unsavedInos);
+
+    const hasUnsavedChanges = unsavedInos.size > 0;
+
+    usePreventUnload(hasUnsavedChanges);
+}

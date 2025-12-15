@@ -137,7 +137,7 @@ export const useFileSystem = create<FileSystemState>()(
 
                         const ino = state.nextIno;
                         state.nextIno = (ino + 1) as Ino;
-                        res.node.set(filename, new Map().set(META_KEY, makeFileNode(ino)));
+                        res.node.set(filename, new Map().set(META_KEY, makeFileNode(get().nextIno)));
                     });
                 },
                 createDir: (path, dirname) => {
@@ -210,7 +210,7 @@ export const useFileSystem = create<FileSystemState>()(
                 const nextIno = typeof persisted.nextIno === 'number' ? persisted.nextIno : currentState.nextIno;
 
                 const activeFile =
-                    typeof persisted.activeFile === 'number' ? persisted.activeFile : currentState.activeFile;
+                    typeof persisted.activeFile === 'string' ? persisted.activeFile : currentState.activeFile;
 
                 return {
                     ...currentState,

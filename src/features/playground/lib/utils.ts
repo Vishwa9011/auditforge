@@ -140,7 +140,5 @@ export const getFileExtension = (path: string) => {
     return parts.pop() || '';
 };
 
-export const extractExtension = getFileExtension;
-
 export const pathIndexed = new Map<string, boolean>();
 export const renderedPathsIndex = pathIndexed;

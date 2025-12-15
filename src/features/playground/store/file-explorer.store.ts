@@ -20,6 +20,7 @@ type FileExplorerStoreState = {
     upsertDraftContent: (ino: Ino, content: string, path?: string) => void;
     markUnsaved: (ino: Ino) => void;
     clearUnsaved: (ino: Ino) => void;
+    clearAllUnsaved: () => void;
     setCurrentFileContent: (content: string | null) => void;
 };
 
@@ -37,6 +38,11 @@ export const useFileExplorerStore = create<FileExplorerStoreState>()(
         clearUnsaved: (ino: Ino) => {
             set(state => {
                 state.unsavedInos.delete(ino);
+            });
+        },
+        clearAllUnsaved: () => {
+            set(state => {
+                state.unsavedInos.clear();
             });
         },
         upsertDraftContent: (ino: Ino, content: string, path?: string) => {

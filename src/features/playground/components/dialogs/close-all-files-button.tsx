@@ -11,63 +11,100 @@ import {
 import { saveAllUnsavedFiles } from '@features/playground/lib';
 import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
 import { TriangleAlert } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-import { useToggle } from '../../hooks';
+import { useState } from 'react';
+import { useToggle } from '@features/playground/hooks';
+
+function getCloseAllTabsTriggerTitle({
+    title,
+    hasOpenFiles,
+    unsavedCount,
+}: {
+    title?: string;
+    hasOpenFiles: boolean;
+    unsavedCount: number;
+}) {
+    if (title) return title;
+
+    const baseTitle = 'Close all tabs';
+    if (!hasOpenFiles) return baseTitle;
+    if (unsavedCount > 0) return `${baseTitle} (${unsavedCount} unsaved)`;
+    return baseTitle;
+}
 
 type CloseAllFilesButtonProps = {
     title?: string;
     isOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
     isTriggerButton?: boolean;
+    action?: () => void;
 };
 
-export function CloseAllFilesButton({ isOpen, title, isTriggerButton = true }: CloseAllFilesButtonProps) {
-    const [isAlertOpen, setIsAlertOpen] = useToggle();
+export function CloseAllFilesButton({
+    isOpen,
+    onOpenChange,
+    title,
+    isTriggerButton = true,
+    action,
+}: CloseAllFilesButtonProps) {
+    const [uncontrolledOpen, setUncontrolledOpen] = useToggle(false);
     const [isWorking, setIsWorking] = useState(false);
 
     const openFilesCount = useFileSystem(state => state.openFiles.size);
     const closeAllFiles = useFileSystem(state => state.closeAllFiles);
 
-    const unsavedInos = useFileExplorerStore(state => state.unsavedInos);
-    const clearUnsaved = useFileExplorerStore(state => state.clearUnsaved);
+    const unsavedCount = useFileExplorerStore(state => state.unsavedInos.size);
+    const clearAllUnsaved = useFileExplorerStore(state => state.clearAllUnsaved);
 
-    const unsavedCount = unsavedInos.size;
-    const isDisabled = openFilesCount === 0 || isWorking;
+    const hasOpenFiles = openFilesCount > 0;
+    const hasUnsavedChanges = unsavedCount > 0;
+    const isDisabled = !hasOpenFiles || isWorking;
 
-    const buttonTitle = useMemo(() => {
-        if (title) return title;
-        if (openFilesCount === 0) return 'Close all tabs';
-        if (unsavedCount > 0) return `Close all tabs (${unsavedCount} unsaved)`;
-        return 'Close all tabs';
-    }, [openFilesCount, unsavedCount, title]);
-
-    const requestCloseAll = () => {
-        if (openFilesCount === 0) return;
-        if (unsavedCount > 0) setIsAlertOpen(true);
-        else closeAllFiles();
+    const isControlled = typeof isOpen === 'boolean';
+    const dialogOpen = isControlled ? isOpen : uncontrolledOpen;
+    const setDialogOpen = (nextOpen: boolean) => {
+        onOpenChange?.(nextOpen);
+        if (!isControlled) {
+            setUncontrolledOpen(nextOpen);
+        }
     };
 
-    const saveAllAndClose = async () => {
+    const triggerTitle = getCloseAllTabsTriggerTitle({ title, hasOpenFiles, unsavedCount });
+
+    const handleRequestCloseAll = () => {
+        if (!hasOpenFiles) return;
+        if (hasUnsavedChanges) {
+            setDialogOpen(true);
+            return;
+        }
+        closeAllFiles();
+        action?.();
+    };
+
+    const handleSaveAllAndClose = async () => {
         setIsWorking(true);
         try {
             await saveAllUnsavedFiles();
             closeAllFiles();
-            setIsAlertOpen(false);
+            setDialogOpen(false);
+            action?.();
         } finally {
             setIsWorking(false);
         }
     };
 
-    const discardAllAndClose = () => {
-        const inos = Array.from(unsavedInos);
-        for (const ino of inos) clearUnsaved(ino);
+    const handleDiscardAllAndClose = () => {
+        clearAllUnsaved();
         closeAllFiles();
-        setIsAlertOpen(false);
+        setDialogOpen(false);
+        action?.();
     };
 
-    useEffect(() => {
-        if (isOpen === undefined) return;
-        setIsAlertOpen(isOpen);
-    }, [isOpen]);
+    const handleDialogOpenChange = (nextOpen: boolean) => {
+        if (isWorking) return;
+        setDialogOpen(nextOpen);
+    };
+
+    const unsavedLabel = unsavedCount === 1 ? 'file' : 'files';
 
     return (
         <>
@@ -76,22 +113,16 @@ export function CloseAllFilesButton({ isOpen, title, isTriggerButton = true }: C
                     type="button"
                     variant="ghost"
                     className="h-7 px-2 text-xs"
-                    title={buttonTitle}
-                    aria-label={buttonTitle}
+                    title={triggerTitle}
+                    aria-label={triggerTitle}
                     disabled={isDisabled}
-                    onClick={requestCloseAll}
+                    onClick={handleRequestCloseAll}
                 >
                     <span>Close all</span>
                 </Button>
             )}
 
-            <AlertDialog
-                open={isAlertOpen}
-                onOpenChange={nextOpen => {
-                    if (isWorking) return;
-                    setIsAlertOpen(nextOpen);
-                }}
-            >
+            <AlertDialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
                 <AlertDialogContent className="rounded-xl p-6 sm:max-w-sm">
                     <div className="flex flex-col items-center text-center">
                         <div className="bg-muted text-foreground mb-4 flex size-12 items-center justify-center rounded-xl">
@@ -103,13 +134,13 @@ export function CloseAllFilesButton({ isOpen, title, isTriggerButton = true }: C
                                 {title ?? 'Close all files?'}
                             </AlertDialogTitle>
                             <AlertDialogDescription className="text-muted-foreground text-sm leading-relaxed">
-                                You have unsaved changes in {unsavedCount} {unsavedCount === 1 ? 'file' : 'files'}.
+                                You have unsaved changes in {unsavedCount} {unsavedLabel}.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
 
                         <div className="mt-5 grid w-full gap-2">
                             <AlertDialogAction asChild>
-                                <Button className="h-10 w-full" disabled={isWorking} onClick={saveAllAndClose}>
+                                <Button className="h-10 w-full" disabled={isWorking} onClick={handleSaveAllAndClose}>
                                     {isWorking ? 'Saving…' : 'Save All & Close'}
                                 </Button>
                             </AlertDialogAction>
@@ -119,7 +150,7 @@ export function CloseAllFilesButton({ isOpen, title, isTriggerButton = true }: C
                                     variant="secondary"
                                     className="h-10 w-full"
                                     disabled={isWorking}
-                                    onClick={discardAllAndClose}
+                                    onClick={handleDiscardAllAndClose}
                                 >
                                     Don&apos;t Save
                                 </Button>

@@ -35,3 +35,19 @@ export async function saveAllUnsavedFiles() {
 
     return savedCount;
 }
+
+export const createFileWithContent = async (path: string, filename: string, content: string) => {
+    const createFile = useFileSystem.getState().createFile;
+
+    createFile(path, filename);
+
+    const res = resolvePath(`${path}/${filename}`);
+    if (res.kind !== 'found') {
+        console.error('Failed to create file at', `${path}/${filename}`);
+        return false;
+    }
+
+    await writeFileContent(res.meta.ino, content);
+
+    return true;
+};

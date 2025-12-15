@@ -21,7 +21,7 @@ export const usePgUiToggle = create<PlaygroundUiToggleStore>()(
 
             toggle: (id, enabled) => {
                 set(state => {
-                    state.toggleStateById[id] = enabled ?? !Boolean(state.toggleStateById[id]);
+                    state.toggleStateById[id] = enabled ?? !state.toggleStateById[id];
                 });
             },
 

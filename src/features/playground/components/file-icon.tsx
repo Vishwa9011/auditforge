@@ -7,15 +7,12 @@ const iconModules = {
     ...import.meta.glob('/src/assets/icons/*.svg', { eager: true, import: 'default' }),
 } as Record<string, string>;
 
-console.log('iconModules: ', iconModules);
 const iconsByKey = Object.entries(iconModules).reduce<Record<string, string>>((acc, [path, url]) => {
     const match = /\/([^/]+)\.svg$/i.exec(path);
     if (!match) return acc;
     acc[match[1].toLowerCase()] = url;
     return acc;
 }, {});
-
-console.log('iconsByKey: ', iconsByKey);
 
 const extensionAliases: Record<string, string> = {
     jsx: 'js',
@@ -60,7 +57,7 @@ export function FileIcon({ extension, mode = 'img', size, className, imgClassNam
             return (
                 typeof CSS !== 'undefined' &&
                 typeof CSS.supports === 'function' &&
-                (CSS.supports('mask-image', 'url(\"\")') || CSS.supports('-webkit-mask-image', 'url(\"\")'))
+                (CSS.supports('mask-image', 'url("")') || CSS.supports('-webkit-mask-image', 'url("")'))
             );
         } catch {
             return false;
