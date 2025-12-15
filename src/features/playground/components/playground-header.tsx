@@ -1,14 +1,14 @@
 import { cn } from '@/lib/utils';
 import { useMemo, useState } from 'react';
-import { useFileExplorerStore, useFileSystem } from '../store';
-import { Button } from '@/components/ui/button';
-import { Bot, Loader2, Save, SaveAll, Sidebar } from 'lucide-react';
 import type { InodeMeta } from '../types';
-import { resolveFilename, resolvePath } from '../store/file-system';
-import { CloseFileButton } from './dialogs/close-file-button';
-import { CloseAllFilesButton } from './dialogs/close-all-files-button';
-import { useSidebarStore } from '../store/sidebar.store';
+import { Button } from '@/components/ui/button';
+import { useUiToggle } from '../hooks/use-ui-toggle';
 import { saveAllUnsavedFiles, saveFileByIno } from '../lib';
+import { CloseFileButton } from './dialogs/close-file-button';
+import { useFileExplorerStore, useFileSystem } from '../store';
+import { Bot, Loader2, Save, SaveAll, Sidebar } from 'lucide-react';
+import { resolveFilename, resolvePath } from '../store/file-system';
+import { CloseAllFilesButton } from './dialogs/close-all-files-button';
 
 export function PlaygroundHeader() {
     const [isSaving, setIsSaving] = useState(false);
@@ -17,7 +17,7 @@ export function PlaygroundHeader() {
     const openFiles = useFileSystem(state => state.openFiles);
     const activeFile = useFileSystem(state => state.activeFile);
     const setActiveFile = useFileSystem(state => state.setActiveFile);
-    const toggleSidebar = useSidebarStore(state => state.toggleSidebar);
+    const { toggle } = useUiToggle('file-explorer-panel');
 
     const unsavedInos = useFileExplorerStore(state => state.unsavedInos);
 
@@ -78,7 +78,7 @@ export function PlaygroundHeader() {
                     className="h-8 w-8"
                     title="Toggle sidebar"
                     aria-label="Toggle sidebar"
-                    onClick={() => toggleSidebar()}
+                    onClick={() => toggle()}
                 >
                     <Sidebar className="size-4" />
                 </Button>
@@ -158,7 +158,7 @@ export function PlaygroundHeader() {
                                         }
                                     }}
                                 >
-                                    <span className={cn('max-w-[12rem] truncate text-xs', isActive && 'font-semibold')}>
+                                    <span className={cn('max-w-48 truncate text-xs', isActive && 'font-semibold')}>
                                         {file.name}
                                     </span>
                                     <CloseFileButton {...file} />

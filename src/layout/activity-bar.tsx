@@ -2,15 +2,18 @@ import { cn } from '@/lib/utils';
 import { navLinks } from '@/constants';
 import { Settings } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
+import { useUiToggle } from '@/features/playground/hooks';
 
 export default function ActivityBar() {
+    const toggle = useUiToggle('file-explorer-panel').toggle;
     return (
         <aside className="border-sidebar-border bg-sidebar text-sidebar-foreground z-50 flex h-screen w-12 shrink-0 flex-col border-r">
             <nav aria-label="Primary" className="flex flex-1 flex-col items-center gap-1 px-1 py-2">
                 <ul className="flex w-full flex-col items-center gap-1">
-                    {navLinks.map((item, index) => (
-                        <li key={`${item.title}-${item.url}-${index}`} className="w-full">
+                    {navLinks.map(item => (
+                        <li key={item.id} className="w-full">
                             <Link
+                                onClick={() => item.id === 'file-explorer' && toggle()}
                                 to={item.url}
                                 activeOptions={{ exact: item.url === '/' }}
                                 activeProps={() => ({ 'data-active': 'true' })}

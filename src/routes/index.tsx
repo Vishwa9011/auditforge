@@ -1,31 +1,19 @@
-import { useEffect } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { saveActiveFile } from '@/features/playground/lib';
 import { FileExplorer, PlaygroundLayout } from '@/features/playground/components';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { useUiToggle } from '@/features/playground/hooks/use-ui-toggle';
 
 export const Route = createFileRoute('/')({
     component: Index,
 });
 
 function Index() {
-    useEffect(() => {
-        function handleKeyDown(event: KeyboardEvent) {
-            const isCtrlOrCmd = event.ctrlKey || event.metaKey;
-            if (isCtrlOrCmd && event.key.toLowerCase() === 's') {
-                event.preventDefault();
-                saveActiveFile();
-            }
-        }
-
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
+    const { isEnabled } = useUiToggle('file-explorer-panel');
 
     return (
         <div className="h-dvh w-full overflow-hidden">
             <ResizablePanelGroup direction="horizontal" className="min-h-0">
-                <ResizablePanel defaultSize={20} className="min-h-0 max-w-72">
+                <ResizablePanel defaultSize={20} className="min-h-0 max-w-72" hidden={!isEnabled}>
                     <FileExplorer />
                 </ResizablePanel>
                 <ResizableHandle />
