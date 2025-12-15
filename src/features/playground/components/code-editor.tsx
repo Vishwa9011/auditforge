@@ -1,9 +1,9 @@
 import Editor from '@monaco-editor/react';
-import type { InodeMeta } from '../types';
+import type { InodeMeta } from '@features/playground/types';
 import { useEffect, useMemo } from 'react';
-import { useFileExplorerStore } from '../store';
+import { useFileExplorerStore } from '@features/playground/store';
 import { useDebouncedCallback } from 'use-debounce';
-import { getFileExtension } from '../store/file-system';
+import { getFileExtension } from '@features/playground/store/file-system';
 
 type CodeEditorProps = {
     content?: string | null;

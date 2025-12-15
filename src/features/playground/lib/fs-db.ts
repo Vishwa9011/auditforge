@@ -1,5 +1,5 @@
 import { openDB, type IDBPDatabase } from 'idb';
-import type { Ino } from '../types';
+import type { Ino } from '@features/playground/types';
 
 export const DB_NAME = 'AuditForgeFileSystem';
 export const FILE_STORE = 'AuditForgeSystem_files';

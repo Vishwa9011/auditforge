@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
-export const UI_TOGGLE_KEYS = ['file-explorer-panel'] as const;
+export const UI_TOGGLE_KEYS = ['file-explorer-panel', 'analyzer-panel'] as const;
 
 type PlaygroundUiToggleStore = {
     toggleStateById: Record<string, boolean>;

@@ -1,8 +1,8 @@
 import { memo } from 'react';
-import type { FsNode, InodeMeta } from '../../types';
-import { buildPath, getDirEntries, getMeta, renderedPathsIndex } from '../../store/file-system';
-import { FileItem } from './FileItem';
-import { FolderItem } from './FolderItem';
+import type { FsNode, InodeMeta } from '@features/playground/types';
+import { buildPath, getDirEntries, getMeta, renderedPathsIndex } from '@features/playground/store/file-system';
+import { FileItem } from '@features/playground/components/file-tree/FileItem';
+import { FolderItem } from '@features/playground/components/file-tree/FolderItem';
 
 type FileTreeProps = {
     name: string;

@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { TriangleAlert, Trash } from 'lucide-react';
 import type { MouseEvent } from 'react';
-import type { InodeMeta } from '../../types';
+import type { InodeMeta } from '@features/playground/types';
 
 type DeleteDialogProps = {
     type: InodeMeta['type'];

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { FileExplorer, PlaygroundLayout } from '@/features/playground/components';
+import { FileExplorer, PlaygroundLayout } from '@features/playground/components';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useUiToggle } from '@/features/playground/hooks/use-ui-toggle';
+import { useUiToggle } from '@features/playground/hooks/use-ui-toggle';
 
 export const Route = createFileRoute('/')({
     component: Index,

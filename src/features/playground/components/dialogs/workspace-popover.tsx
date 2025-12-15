@@ -5,9 +5,9 @@ import { cn } from '@/lib/utils';
 import { Check, ChevronDown, Plus } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 import { toast } from 'sonner';
-import { useToggle } from '../../hooks';
-import { useFileSystem } from '../../store';
-import { getWorkspaceNames } from '../../store/file-system';
+import { useToggle } from '@features/playground/hooks';
+import { useFileSystem } from '@features/playground/store';
+import { getWorkspaceNames } from '@features/playground/store/file-system';
 
 import {
     Dialog,
@@ -49,7 +49,6 @@ export function WorkspacePopover() {
                     ) : (
                         workspaceNames.map(name => {
                             const isSelected = name === selectedWorkspace;
-
                             return (
                                 <Button
                                     key={name}

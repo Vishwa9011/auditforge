@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { enableMapSet } from 'immer';
 import { immer } from 'zustand/middleware/immer';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { FsNode, Ino } from '../types';
+import type { FsNode, Ino } from '@features/playground/types';
 import {
     META_KEY,
     computeNextIno,
@@ -14,7 +14,7 @@ import {
     resolvePath,
     serializeFsTree,
     splitPath,
-} from './file-system';
+} from '@features/playground/store/file-system';
 
 enableMapSet();
 

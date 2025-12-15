@@ -8,13 +8,13 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import type { InodeMeta } from '../../types';
-import { useFileExplorerStore, useFileSystem } from '../../store';
-import { useToggle } from '../../hooks';
+import type { InodeMeta } from '@features/playground/types';
+import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
+import { useToggle } from '@features/playground/hooks';
 import { TriangleAlert, X } from 'lucide-react';
-import { saveFileByIno } from '../../lib';
+import { saveFileByIno } from '@features/playground/lib';
 import { useMemo, useState, type MouseEvent } from 'react';
-import { resolveFilename } from '../../store/file-system';
+import { resolveFilename } from '@features/playground/store/file-system';
 
 type CloseFileButtonProps = InodeMeta & { path: string; name?: string; content?: string };
 

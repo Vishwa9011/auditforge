@@ -1,16 +1,16 @@
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Pencil } from 'lucide-react';
-import { FileIcon } from '../file-icon';
+import { FileIcon } from '@features/playground/components/file-icon';
 import { Button } from '@/components/ui/button';
-import type { InodeMeta } from '../../types';
-import { useFileSystem } from '../../store';
-import { NodeNameInput } from './NodeNameInput';
-import type { FileOperationMode } from './types';
+import type { InodeMeta } from '@features/playground/types';
+import { useFileSystem } from '@features/playground/store';
+import { NodeNameInput } from '@features/playground/components/file-tree/NodeNameInput';
+import type { FileOperationMode } from '@features/playground/components/file-tree/types';
 import { memo, useState, type MouseEvent } from 'react';
-import { TreeItemActionBar } from './TreeItemActionBar';
-import { DeleteDialog } from '../dialogs/delete-dialog';
-import { getFileExtension } from '../../store/file-system';
+import { TreeItemActionBar } from '@features/playground/components/file-tree/TreeItemActionBar';
+import { DeleteDialog } from '@features/playground/components/dialogs/delete-dialog';
+import { getFileExtension } from '@features/playground/store/file-system';
 
 type FileItemProps = {
     name: string;

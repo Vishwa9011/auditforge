@@ -1,6 +1,6 @@
-import type { FsNode, Ino, InodeMeta } from '../../types';
-import { META_KEY } from './constants';
-import { coerceInodeMeta } from './inode-meta';
+import type { FsNode, Ino, InodeMeta } from '@features/playground/types';
+import { META_KEY } from '@features/playground/store/file-system/constants';
+import { coerceInodeMeta } from '@features/playground/store/file-system/inode-meta';
 
 export function makeFileNode(ino: Ino) {
     return {

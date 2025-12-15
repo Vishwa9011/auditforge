@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Ino } from '../types';
+import type { Ino } from '@features/playground/types';
 import { immer } from 'zustand/middleware/immer';
 import { enableMapSet } from 'immer';
 

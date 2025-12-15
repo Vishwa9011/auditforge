@@ -1,17 +1,17 @@
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { useToggle } from '../../hooks';
+import { useToggle } from '@features/playground/hooks';
 import { Button } from '@/components/ui/button';
-import { buildPath, renderedPathsIndex } from '../../store/file-system';
-import { useFileSystem } from '../../store';
-import type { FsNode, InodeMeta } from '../../types';
+import { buildPath, renderedPathsIndex } from '@features/playground/store/file-system';
+import { useFileSystem } from '@features/playground/store';
+import type { FsNode, InodeMeta } from '@features/playground/types';
 import { memo, useState, type MouseEvent, type ReactNode } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronRight, FilePlusCorner, Folder, FolderOpen, FolderPlus, Pencil } from 'lucide-react';
-import { NodeNameInput } from './NodeNameInput';
-import { TreeItemActionBar } from './TreeItemActionBar';
-import type { FolderOperationMode } from './types';
-import { DeleteDialog } from '../dialogs/delete-dialog';
+import { NodeNameInput } from '@features/playground/components/file-tree/NodeNameInput';
+import { TreeItemActionBar } from '@features/playground/components/file-tree/TreeItemActionBar';
+import type { FolderOperationMode } from '@features/playground/components/file-tree/types';
+import { DeleteDialog } from '@features/playground/components/dialogs/delete-dialog';
 
 type FolderItemProps = {
     name: string;

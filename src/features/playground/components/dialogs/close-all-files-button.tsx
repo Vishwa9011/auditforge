@@ -8,8 +8,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { saveAllUnsavedFiles } from '../../lib';
-import { useFileExplorerStore, useFileSystem } from '../../store';
+import { saveAllUnsavedFiles } from '@features/playground/lib';
+import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
 import { TriangleAlert } from 'lucide-react';
 import { useMemo, useState } from 'react';
 

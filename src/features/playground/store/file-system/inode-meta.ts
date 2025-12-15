@@ -1,5 +1,5 @@
-import type { FsNode, Ino, InodeMeta } from '../../types';
-import { META_KEY } from './constants';
+import type { FsNode, Ino, InodeMeta } from '@features/playground/types';
+import { META_KEY } from '@features/playground/store/file-system/constants';
 
 export function isInodeMetaLike(value: unknown): value is InodeMeta {
     if (!value || typeof value !== 'object') return false;

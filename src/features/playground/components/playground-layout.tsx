@@ -1,5 +1,5 @@
-import { PlaygroundEditor } from './playground-editor';
-import { PlaygroundHeader } from './playground-header';
+import { PlaygroundEditor } from '@features/playground/components/playground-editor';
+import { PlaygroundHeader } from '@features/playground/components/playground-header';
 
 export function PlaygroundLayout() {
     return (

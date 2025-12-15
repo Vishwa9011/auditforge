@@ -1,15 +1,15 @@
 import { cn } from '@/lib/utils';
 import { useMemo, useState } from 'react';
-import type { InodeMeta } from '../types';
+import type { InodeMeta } from '@features/playground/types';
 import { Button } from '@/components/ui/button';
-import { useUiToggle } from '../hooks/use-ui-toggle';
-import { saveAllUnsavedFiles, saveFileByIno } from '../lib';
-import { CloseFileButton } from './dialogs/close-file-button';
-import { useFileExplorerStore, useFileSystem } from '../store';
+import { useUiToggle } from '@features/playground/hooks/use-ui-toggle';
+import { saveAllUnsavedFiles, saveFileByIno } from '@features/playground/lib';
+import { CloseFileButton } from '@features/playground/components/dialogs/close-file-button';
+import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
 import { Bot, Loader2, Save, SaveAll, Sidebar } from 'lucide-react';
-import { getFileExtension, resolveFilename, resolvePath } from '../store/file-system';
-import { CloseAllFilesButton } from './dialogs/close-all-files-button';
-import FileIcon from './file-icon';
+import { getFileExtension, resolveFilename, resolvePath } from '@features/playground/store/file-system';
+import { CloseAllFilesButton } from '@features/playground/components/dialogs/close-all-files-button';
+import FileIcon from '@features/playground/components/file-icon';
 
 export function PlaygroundHeader() {
     const [isSaving, setIsSaving] = useState(false);

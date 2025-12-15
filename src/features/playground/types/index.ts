@@ -1,5 +1,5 @@
 import type { Brand } from '@/types';
-import type { META_KEY } from '../store/file-system';
+import type { META_KEY } from '@features/playground/store/file-system';
 
 export declare const InoBrand: unique symbol;
 export type Ino = Brand<number, typeof InoBrand>;

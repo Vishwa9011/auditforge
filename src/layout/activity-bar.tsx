@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { navLinks } from '@/constants';
 import { Settings } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { useUiToggle } from '@/features/playground/hooks';
+import { useUiToggle } from '@features/playground/hooks';
 
 export default function ActivityBar() {
     const toggle = useUiToggle('file-explorer-panel').toggle;

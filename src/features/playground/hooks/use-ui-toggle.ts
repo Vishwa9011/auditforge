@@ -1,4 +1,4 @@
-import { usePgUiToggle, UI_TOGGLE_KEYS } from '../store';
+import { usePgUiToggle, UI_TOGGLE_KEYS } from '@features/playground/store';
 
 type UiToggleId = (typeof UI_TOGGLE_KEYS)[number] | (string & {});
 

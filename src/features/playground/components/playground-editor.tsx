@@ -1,10 +1,12 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useFileExplorerStore, useFileSystem } from '../store';
-import { CodeEditor } from './code-editor';
-import { resolvePath } from '../store/file-system';
-import { readFileContent } from '../lib';
+import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
+import { CodeEditor } from '@features/playground/components/code-editor';
+import { resolvePath } from '@features/playground/store/file-system';
+import { readFileContent } from '@features/playground/lib';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
+import { EmptyEditorState } from './empty-editor-state';
+import { useUiToggle } from '../hooks';
 
 async function getFile(activeFilePath: string | null) {
     if (!activeFilePath) {
@@ -31,6 +33,9 @@ async function getFile(activeFilePath: string | null) {
 }
 
 export function PlaygroundEditor() {
+    const isAnalyzerOpen = useUiToggle('analyzer-panel').isEnabled;
+    console.log('isAnalyzerOpen: ', isAnalyzerOpen);
+
     const setCurrentFileContent = useFileExplorerStore(state => state.setCurrentFileContent);
     const activeFilePath = useFileSystem(state => state.activeFile);
     const { data } = useQuery({
@@ -47,7 +52,9 @@ export function PlaygroundEditor() {
         <div className="h-full min-h-0 w-full overflow-hidden">
             <ResizablePanelGroup direction="horizontal">
                 <ResizablePanel>
-                    {activeFilePath == null ? null : (
+                    {activeFilePath == null ? (
+                        <EmptyEditorState />
+                    ) : (
                         <CodeEditor
                             path={activeFilePath}
                             content={data?.content}
@@ -57,7 +64,7 @@ export function PlaygroundEditor() {
                     )}
                 </ResizablePanel>
                 <ResizableHandle />
-                <ResizablePanel>
+                <ResizablePanel defaultSize={isAnalyzerOpen ? 300 : 0} minSize={0} maxSize={600} collapsible>
                     <div className="bg-card h-full w-full p-4">Preview Area</div>
                 </ResizablePanel>
             </ResizablePanelGroup>

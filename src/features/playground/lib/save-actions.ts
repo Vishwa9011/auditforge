@@ -1,7 +1,7 @@
-import type { Ino } from '../types';
-import { writeFileContent } from './fs-db';
-import { useFileExplorerStore, useFileSystem } from '../store';
-import { resolvePath } from '../store/file-system';
+import type { Ino } from '@features/playground/types';
+import { writeFileContent } from '@features/playground/lib/fs-db';
+import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
+import { resolvePath } from '@features/playground/store/file-system';
 
 export async function saveFileByIno(ino: Ino) {
     const { draftsByIno, clearUnsaved } = useFileExplorerStore.getState();

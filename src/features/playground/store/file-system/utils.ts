@@ -1,8 +1,8 @@
-import { META_KEY } from './constants';
-import { getMeta, isDir } from './fs-node';
-import { useFileSystem } from '../file-system.store';
-import { coerceInodeMeta, wrapMeta } from './inode-meta';
-import type { FsNode, Ino, ResolveResult } from '../../types';
+import { META_KEY } from '@features/playground/store/file-system/constants';
+import { getMeta, isDir } from '@features/playground/store/file-system/fs-node';
+import { useFileSystem } from '@features/playground/store/file-system.store';
+import { coerceInodeMeta, wrapMeta } from '@features/playground/store/file-system/inode-meta';
+import type { FsNode, Ino, ResolveResult } from '@features/playground/types';
 
 export function resolvePath(path: string, fsTreeParam?: Map<string, FsNode>): ResolveResult {
     const fsTree = fsTreeParam ?? useFileSystem.getState().fsTree;

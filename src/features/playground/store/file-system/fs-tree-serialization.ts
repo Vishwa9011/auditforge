@@ -1,6 +1,6 @@
-import type { FsNode } from '../../types';
-import { META_KEY } from './constants';
-import { coerceInodeMeta, wrapMeta } from './inode-meta';
+import type { FsNode } from '@features/playground/types';
+import { META_KEY } from '@features/playground/store/file-system/constants';
+import { coerceInodeMeta, wrapMeta } from '@features/playground/store/file-system/inode-meta';
 
 type SerializedEntry = [string | number, unknown];
 type SerializedNode = SerializedEntry[];

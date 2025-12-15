@@ -1,7 +1,7 @@
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { useFileSystem } from '../store';
-import { isDir, resolvePath } from '../store/file-system';
+import { useFileSystem } from '@features/playground/store';
+import { isDir, resolvePath } from '@features/playground/store/file-system';
 
 type WorkspaceCreateMode = 'none' | 'create-file' | 'create-folder';
 
@@ -76,4 +76,3 @@ export function useWorkspaceRootCreate() {
         handleNameSubmit,
     };
 }
-

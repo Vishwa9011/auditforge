@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { saveActiveFile } from '@/features/playground/lib';
+import { saveActiveFile } from '@features/playground/lib';
 
 export function useSaveShortcut() {
     useEffect(() => {
