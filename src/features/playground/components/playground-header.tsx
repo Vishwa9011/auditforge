@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useUiToggle } from '@features/playground/hooks/use-ui-toggle';
 import { saveAllUnsavedFiles, saveFileByIno } from '@features/playground/lib';
 import { CloseFileButton } from '@features/playground/components/dialogs/close-file-button';
-import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
+import { useFileEditorStore, useFileSystem } from '@features/playground/store';
 import { Bot, Loader2, Save, SaveAll, Sidebar } from 'lucide-react';
 import { getFileExtension, resolveFilename, resolvePath } from '@features/playground/store/file-system';
 import { CloseAllFilesButton } from '@features/playground/components/dialogs/close-all-files-button';
@@ -20,7 +20,7 @@ export function PlaygroundHeader() {
     const setActiveFile = useFileSystem(state => state.setActiveFile);
     const { toggle } = useUiToggle('file-explorer-panel');
 
-    const unsavedInos = useFileExplorerStore(state => state.unsavedInos);
+    const unsavedInos = useFileEditorStore(state => state.unsavedInos);
 
     const openFileTabs = useMemo(() => {
         const tabs: Array<InodeMeta & { path: string; name: string }> = [];

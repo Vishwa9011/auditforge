@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useToggle } from '@features/playground/hooks';
-import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
+import { useFileEditorStore, useFileSystem } from '@features/playground/store';
 import { getWorkspaceNames } from '@features/playground/store/file-system';
 import { Plus } from 'lucide-react';
 import { type FormEvent, type MouseEvent, useState } from 'react';
@@ -37,7 +37,7 @@ export function CreateWorkspaceDialog({ onWorkspaceCreated }: CreateWorkspaceDia
     const setActiveFile = useFileSystem(state => state.setActiveFile);
     const selectWorkspace = useFileSystem(state => state.selectWorkspace);
 
-    const unsavedCount = useFileExplorerStore(state => state.unsavedInos.size);
+    const unsavedCount = useFileEditorStore(state => state.unsavedInos.size);
 
     const ensureNoUnsavedChanges = () => {
         if (unsavedCount === 0) return true;

@@ -1,10 +1,10 @@
 import type { Ino } from '@features/playground/types';
 import { writeFileContent } from '@features/playground/lib/fs-db';
-import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
+import { useFileEditorStore, useFileSystem } from '@features/playground/store';
 import { resolvePath } from '@features/playground/store/file-system';
 
 export async function saveFileByIno(ino: Ino) {
-    const { draftsByIno, clearUnsaved } = useFileExplorerStore.getState();
+    const { draftsByIno, clearUnsaved } = useFileEditorStore.getState();
     const draft = draftsByIno.get(ino);
     if (!draft) return false;
 
@@ -24,7 +24,7 @@ export async function saveActiveFile() {
 }
 
 export async function saveAllUnsavedFiles() {
-    const { unsavedInos } = useFileExplorerStore.getState();
+    const { unsavedInos } = useFileEditorStore.getState();
     const inos = Array.from(unsavedInos);
 
     let savedCount = 0;

@@ -9,7 +9,7 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import type { InodeMeta } from '@features/playground/types';
-import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
+import { useFileEditorStore, useFileSystem } from '@features/playground/store';
 import { useToggle } from '@features/playground/hooks';
 import { TriangleAlert, X } from 'lucide-react';
 import { saveFileByIno } from '@features/playground/lib';
@@ -22,9 +22,9 @@ export function CloseFileButton({ ino, path, name }: CloseFileButtonProps) {
     const [isAlertOpen, setIsAlertOpen] = useToggle(false);
     const [isSaving, setIsSaving] = useState(false);
     const closeFile = useFileSystem(state => state.closeFile);
-    const hasUnsavedChanges = useFileExplorerStore(state => state.unsavedInos.has(ino));
+    const hasUnsavedChanges = useFileEditorStore(state => state.unsavedInos.has(ino));
 
-    const clearUnsaved = useFileExplorerStore(state => state.clearUnsaved);
+    const clearUnsaved = useFileEditorStore(state => state.clearUnsaved);
     const displayName = useMemo(() => name ?? resolveFilename(path) ?? 'this file', [name, path]);
 
     const requestClose = () => {

@@ -1,5 +1,5 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
+import { useFileEditorStore, useFileSystem } from '@features/playground/store';
 import { CodeEditor } from '@features/playground/components/code-editor';
 import { resolvePath } from '@features/playground/store/file-system';
 import { readFileContent } from '@features/playground/lib';
@@ -36,7 +36,7 @@ export function PlaygroundEditor() {
     const isAnalyzerOpen = useUiToggle('analyzer-panel').isEnabled;
     console.log('isAnalyzerOpen: ', isAnalyzerOpen);
 
-    const setCurrentFileContent = useFileExplorerStore(state => state.setCurrentFileContent);
+    const setCurrentFileContent = useFileEditorStore(state => state.setCurrentFileContent);
     const activeFilePath = useFileSystem(state => state.activeFile);
     const { data } = useQuery({
         queryKey: [activeFilePath],

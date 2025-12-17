@@ -5,7 +5,7 @@ import { enableMapSet } from 'immer';
 
 enableMapSet();
 
-type FileExplorerStoreState = {
+type FileEditorStoreState = {
     currentFileContent: string | null;
     draftsByIno: Map<
         Ino,
@@ -24,7 +24,7 @@ type FileExplorerStoreState = {
     setCurrentFileContent: (content: string | null) => void;
 };
 
-export const useFileExplorerStore = create<FileExplorerStoreState>()(
+export const useFileEditorStore = create<FileEditorStoreState>()(
     immer(set => ({
         currentFileContent: null,
         draftsByIno: new Map(),

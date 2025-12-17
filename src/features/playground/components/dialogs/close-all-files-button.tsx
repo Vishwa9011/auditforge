@@ -9,7 +9,7 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { saveAllUnsavedFiles } from '@features/playground/lib';
-import { useFileExplorerStore, useFileSystem } from '@features/playground/store';
+import { useFileEditorStore, useFileSystem } from '@features/playground/store';
 import { TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { useToggle } from '@features/playground/hooks';
@@ -52,8 +52,8 @@ export function CloseAllFilesButton({
     const openFilesCount = useFileSystem(state => state.openFiles.size);
     const closeAllFiles = useFileSystem(state => state.closeAllFiles);
 
-    const unsavedCount = useFileExplorerStore(state => state.unsavedInos.size);
-    const clearAllUnsaved = useFileExplorerStore(state => state.clearAllUnsaved);
+    const unsavedCount = useFileEditorStore(state => state.unsavedInos.size);
+    const clearAllUnsaved = useFileEditorStore(state => state.clearAllUnsaved);
 
     const hasOpenFiles = openFilesCount > 0;
     const hasUnsavedChanges = unsavedCount > 0;

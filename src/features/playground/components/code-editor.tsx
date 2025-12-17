@@ -1,7 +1,7 @@
 import Editor from '@monaco-editor/react';
 import type { InodeMeta } from '@features/playground/types';
 import { useEffect, useMemo } from 'react';
-import { useFileExplorerStore } from '@features/playground/store';
+import { useFileEditorStore } from '@features/playground/store';
 import { useDebouncedCallback } from 'use-debounce';
 import { getFileExtension } from '@features/playground/store/file-system';
 
@@ -13,10 +13,10 @@ type CodeEditorProps = {
 };
 
 export function CodeEditor({ path, content, meta, isEditorOpen }: CodeEditorProps) {
-    const unsavedInos = useFileExplorerStore(state => state.unsavedInos);
-    const markUnsaved = useFileExplorerStore(state => state.markUnsaved);
-    const draftsByIno = useFileExplorerStore(state => state.draftsByIno);
-    const upsertDraftContent = useFileExplorerStore(state => state.upsertDraftContent);
+    const unsavedInos = useFileEditorStore(state => state.unsavedInos);
+    const markUnsaved = useFileEditorStore(state => state.markUnsaved);
+    const draftsByIno = useFileEditorStore(state => state.draftsByIno);
+    const upsertDraftContent = useFileEditorStore(state => state.upsertDraftContent);
     const debouncedUpsertDraftContent = useDebouncedCallback(upsertDraftContent, 100);
 
     function handleEditorValidation(markers: readonly { message: string }[]) {
@@ -28,7 +28,7 @@ export function CodeEditor({ path, content, meta, isEditorOpen }: CodeEditorProp
             debouncedUpsertDraftContent(meta.ino, value, path || undefined);
             if (unsavedInos.has(meta.ino)) {
                 if (value === content) {
-                    useFileExplorerStore.getState().clearUnsaved(meta.ino);
+                    useFileEditorStore.getState().clearUnsaved(meta.ino);
                 }
             }
             if (!unsavedInos.has(meta.ino)) markUnsaved(meta.ino);
@@ -42,7 +42,7 @@ export function CodeEditor({ path, content, meta, isEditorOpen }: CodeEditorProp
     }, [draftsByIno, meta]);
 
     useEffect(() => {
-        const upsertDraftContent = useFileExplorerStore.getState().upsertDraftContent;
+        const upsertDraftContent = useFileEditorStore.getState().upsertDraftContent;
         if (meta && content !== undefined && content !== null) {
             if (draftContent == null) {
                 upsertDraftContent(meta.ino, content, path || undefined);
