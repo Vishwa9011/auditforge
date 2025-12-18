@@ -27,7 +27,10 @@ const NUM_PREDICT_BY_THINKING: Record<ThinkingLevel, number> = {
     high: 3400,
 };
 
-export const analyzeWithOllama = async (input: AnalyzeRequest, config: OllamaProviderConfig): Promise<AnalyzeResult> => {
+export const analyzeWithOllama = async (
+    input: AnalyzeRequest,
+    config: OllamaProviderConfig,
+): Promise<AnalyzeResult> => {
     const parsedInput = AnalyzeRequestSchema.safeParse(input);
     if (!parsedInput.success) {
         return { ok: false, error: parsedInput.error };

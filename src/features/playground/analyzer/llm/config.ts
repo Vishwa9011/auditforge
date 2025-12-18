@@ -34,12 +34,7 @@ export function getAllowedThinkingLevels(provider: LlmProvider, model: string): 
     return suggestion?.allowedThinkingLevels ?? [...THINKING_LEVELS];
 }
 
-export function clampThinkingLevel(
-    provider: LlmProvider,
-    model: string,
-    thinkingLevel: ThinkingLevel,
-): ThinkingLevel {
+export function clampThinkingLevel(provider: LlmProvider, model: string, thinkingLevel: ThinkingLevel): ThinkingLevel {
     const allowed = getAllowedThinkingLevels(provider, model);
     return allowed.includes(thinkingLevel) ? thinkingLevel : (allowed[0] ?? 'medium');
 }
-

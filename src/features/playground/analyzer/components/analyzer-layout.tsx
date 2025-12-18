@@ -41,12 +41,12 @@ export function AnalyzerLayout() {
                     },
                 },
                 {
-                language: 'solidity',
-                scope: 'file',
-                file: {
-                    name: resolveFilename(activeFile) || 'unknown.sol',
-                    content: fileContent,
-                },
+                    language: 'solidity',
+                    scope: 'file',
+                    file: {
+                        name: resolveFilename(activeFile) || 'unknown.sol',
+                        content: fileContent,
+                    },
                 },
             );
 

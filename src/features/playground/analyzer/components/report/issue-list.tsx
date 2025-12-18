@@ -48,7 +48,7 @@ export function IssueList({ issues }: { issues: Issue[] }) {
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <div className="relative w-full sm:w-72">
-                        <Search className="text-muted-foreground absolute left-2 top-2 size-4" />
+                        <Search className="text-muted-foreground absolute top-2 left-2 size-4" />
                         <Input
                             value={query}
                             onChange={e => setQuery(e.target.value)}
@@ -93,7 +93,9 @@ export function IssueList({ issues }: { issues: Issue[] }) {
                 <Card>
                     <CardContent className="py-10 text-center">
                         <p className="text-sm font-medium">No issues match your filters.</p>
-                        <p className="text-muted-foreground mt-1 text-xs">Try clearing filters or changing the query.</p>
+                        <p className="text-muted-foreground mt-1 text-xs">
+                            Try clearing filters or changing the query.
+                        </p>
                     </CardContent>
                 </Card>
             ) : (
@@ -127,14 +129,14 @@ function IssueRow({ issue }: { issue: Issue }) {
                                         <div className="flex flex-wrap items-center gap-2">
                                             <SeverityBadge severity={issue.severity} />
                                             <CategoryBadge category={issue.category} />
-                                            {loc ? (
-                                                <span className="text-muted-foreground text-xs">{loc}</span>
-                                            ) : null}
+                                            {loc ? <span className="text-muted-foreground text-xs">{loc}</span> : null}
                                         </div>
                                         <p className="mt-1 truncate text-sm font-medium">{issue.title}</p>
                                     </div>
                                 </div>
-                                <span className="text-muted-foreground shrink-0 text-xs">{issue.severity.toUpperCase()}</span>
+                                <span className="text-muted-foreground shrink-0 text-xs">
+                                    {issue.severity.toUpperCase()}
+                                </span>
                             </div>
                         </Button>
                     </CollapsibleTrigger>
@@ -145,11 +147,15 @@ function IssueRow({ issue }: { issue: Issue }) {
                         <div className="grid gap-3 sm:grid-cols-2">
                             <div className="space-y-1">
                                 <p className="text-xs font-medium">Description</p>
-                                <p className={cn('text-muted-foreground text-sm leading-relaxed')}>{issue.description}</p>
+                                <p className={cn('text-muted-foreground text-sm leading-relaxed')}>
+                                    {issue.description}
+                                </p>
                             </div>
                             <div className="space-y-1">
                                 <p className="text-xs font-medium">Recommendation</p>
-                                <p className={cn('text-muted-foreground text-sm leading-relaxed')}>{issue.recommendation}</p>
+                                <p className={cn('text-muted-foreground text-sm leading-relaxed')}>
+                                    {issue.recommendation}
+                                </p>
                             </div>
                         </div>
                     </CollapsibleContent>

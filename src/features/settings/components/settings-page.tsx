@@ -11,7 +11,12 @@ import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
 import { Cog, Download, ExternalLink, RotateCcw, Upload } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { THINKING_LEVELS, type LlmProvider, type ThinkingLevel, MODEL_SUGGESTIONS } from '@features/playground/analyzer/llm/config';
+import {
+    THINKING_LEVELS,
+    type LlmProvider,
+    type ThinkingLevel,
+    MODEL_SUGGESTIONS,
+} from '@features/playground/analyzer/llm/config';
 import { useAnalyzerSettings } from '@features/playground/analyzer/store/analyzer-settings.store';
 import { useEditorSettings, type EditorFontFamily } from '../store/editor-settings.store';
 
@@ -39,12 +44,20 @@ export function SettingsPage({ initialTab = 'editor' }: { initialTab?: SettingsT
                                 </TabsList>
 
                                 <div className="hidden md:block">
-                                    <div className="text-muted-foreground mb-2 text-xs font-medium uppercase tracking-wide">
+                                    <div className="text-muted-foreground mb-2 text-xs font-medium tracking-wide uppercase">
                                         Settings
                                     </div>
                                     <div className="space-y-1">
-                                        <SidebarTabButton active={tab === 'editor'} onClick={() => setTab('editor')} label="Editor" />
-                                        <SidebarTabButton active={tab === 'analyzer'} onClick={() => setTab('analyzer')} label="Analyzer" />
+                                        <SidebarTabButton
+                                            active={tab === 'editor'}
+                                            onClick={() => setTab('editor')}
+                                            label="Editor"
+                                        />
+                                        <SidebarTabButton
+                                            active={tab === 'analyzer'}
+                                            onClick={() => setTab('analyzer')}
+                                            label="Analyzer"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -169,9 +182,7 @@ function EditorSettingsSection() {
                                     <SelectItem value="System Mono">System Mono</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <p className="text-muted-foreground text-xs">
-                                Applied immediately to Monaco editor.
-                            </p>
+                            <p className="text-muted-foreground text-xs">Applied immediately to Monaco editor.</p>
                         </div>
 
                         <div className="space-y-2">
@@ -179,7 +190,13 @@ function EditorSettingsSection() {
                                 <Label>Font size</Label>
                                 <span className="text-muted-foreground text-xs">{fontSize}px</span>
                             </div>
-                            <Slider value={[fontSize]} min={12} max={24} step={1} onValueChange={v => setFontSize(v[0] ?? fontSize)} />
+                            <Slider
+                                value={[fontSize]}
+                                min={12}
+                                max={24}
+                                step={1}
+                                onValueChange={v => setFontSize(v[0] ?? fontSize)}
+                            />
                         </div>
 
                         <div className="space-y-2">
@@ -187,7 +204,13 @@ function EditorSettingsSection() {
                                 <Label>Line height</Label>
                                 <span className="text-muted-foreground text-xs">{lineHeight}px</span>
                             </div>
-                            <Slider value={[lineHeight]} min={16} max={32} step={1} onValueChange={v => setLineHeight(v[0] ?? lineHeight)} />
+                            <Slider
+                                value={[lineHeight]}
+                                min={16}
+                                max={32}
+                                step={1}
+                                onValueChange={v => setLineHeight(v[0] ?? lineHeight)}
+                            />
                         </div>
 
                         <div className="space-y-2">

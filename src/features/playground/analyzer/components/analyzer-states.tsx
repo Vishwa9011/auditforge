@@ -77,7 +77,9 @@ export function AnalyzerEmptyState() {
                         <Sparkles className="text-muted-foreground size-4" />
                         Ready to analyze
                     </CardTitle>
-                    <CardDescription>Select a model, then click Analyze to generate a structured audit report.</CardDescription>
+                    <CardDescription>
+                        Select a model, then click Analyze to generate a structured audit report.
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="text-muted-foreground text-sm">
@@ -108,4 +110,3 @@ export function AnalyzerErrorState({ error }: { error: unknown }) {
         </div>
     );
 }
-
