@@ -1,4 +1,4 @@
-import { Files, User } from 'lucide-react';
+import { Files, Import, User } from 'lucide-react';
 
 export const navLinks = [
     {
@@ -8,9 +8,15 @@ export const navLinks = [
         icon: Files,
     },
     {
+        id: 'import',
+        title: 'Import',
+        url: '/import',
+        icon: Import,
+    },
+    {
         id: 'profile',
         title: 'Profile',
         url: '/profile',
         icon: User,
     },
-];
+] as const;
