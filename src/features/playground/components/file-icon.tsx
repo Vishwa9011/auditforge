@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils';
 import type { CSSProperties } from 'react';
 
-import defaultIconUrl from '/public/assets/icons/code.svg';
+import defaultIconUrl from '/assets/icons/code.svg';
 
 const iconModules = {
-    ...import.meta.glob('/public/assets/icons/*.svg', { eager: true, import: 'default' }),
+    ...import.meta.glob('/assets/icons/*.svg', { eager: true, import: 'default' }),
 } as Record<string, string>;
 
 const iconsByKey = Object.entries(iconModules).reduce<Record<string, string>>((acc, [path, url]) => {
