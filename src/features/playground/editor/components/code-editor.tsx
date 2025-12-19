@@ -84,8 +84,8 @@ export function CodeEditor({ path, content, meta, extension }: CodeEditorProps) 
             // Quick suggestions
             quickSuggestions: {
                 other: true,
-                comments: false,
-                strings: false,
+                comments: true,
+                strings: true,
             },
             // Smooth cursor
             cursorSmoothCaretAnimation: 'on',
