@@ -47,7 +47,9 @@ export function WorkspaceImportCard({
         <Card>
             <CardHeader>
                 <CardTitle>Add to workspace</CardTitle>
-                <CardDescription>Create a folder in your current workspace and write the imported files.</CardDescription>
+                <CardDescription>
+                    Create a folder in your current workspace and write the imported files.
+                </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-12">
@@ -83,7 +85,7 @@ export function WorkspaceImportCard({
                         <div className="flex items-center gap-2">
                             <Switch checked={openAfterImport} onCheckedChange={onOpenAfterImportChange} />
                             <div className="text-sm">
-                                <div className="font-medium leading-none">Open after import</div>
+                                <div className="leading-none font-medium">Open after import</div>
                                 <div className="text-muted-foreground text-xs">Focus the first created file</div>
                             </div>
                         </div>
@@ -117,4 +119,3 @@ export function WorkspaceImportCard({
         </Card>
     );
 }
-

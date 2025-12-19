@@ -24,7 +24,9 @@ export function useWorkspaceDestination(params: {
 
     const suggestedDestinationFolder = useMemo(() => {
         const base = sanitizeRelativeDirPath(params.contractNameForDefaults || 'contract') || 'contract';
-        const addrSuffix = params.contractAddress.trim().startsWith('0x') ? params.contractAddress.trim().slice(2, 8) : '';
+        const addrSuffix = params.contractAddress.trim().startsWith('0x')
+            ? params.contractAddress.trim().slice(2, 8)
+            : '';
         return `contracts/${addrSuffix ? `${base}-${addrSuffix}` : base}`;
     }, [params.contractAddress, params.contractNameForDefaults]);
 

@@ -57,7 +57,10 @@ function RouteComponent() {
 
     const initials = useMemo(() => {
         const parts = displayName.split(' ').filter(Boolean).slice(0, 2);
-        const letters = parts.map(part => part[0]?.toUpperCase()).filter(Boolean).join('');
+        const letters = parts
+            .map(part => part[0]?.toUpperCase())
+            .filter(Boolean)
+            .join('');
         return letters || 'U';
     }, [displayName]);
 
@@ -209,7 +212,9 @@ function RouteComponent() {
                                     <div className="flex items-center justify-between gap-3">
                                         <div>
                                             <div className="text-sm font-semibold">Edit profile</div>
-                                            <div className="text-muted-foreground text-xs">Saved locally in this browser</div>
+                                            <div className="text-muted-foreground text-xs">
+                                                Saved locally in this browser
+                                            </div>
                                         </div>
                                         <Button
                                             variant="outline"

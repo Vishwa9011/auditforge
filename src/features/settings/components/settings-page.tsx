@@ -152,7 +152,9 @@ function ImportSettingsSection() {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            <p className="text-muted-foreground text-xs">Used as the default chain on the Import page.</p>
+                            <p className="text-muted-foreground text-xs">
+                                Used as the default chain on the Import page.
+                            </p>
                         </div>
 
                         <div className="space-y-2">

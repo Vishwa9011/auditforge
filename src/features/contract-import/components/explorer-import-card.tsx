@@ -87,7 +87,9 @@ export function ExplorerImportCard({
                         )}
                     </Button>
 
-                    {isError && errorMessage ? <div className="text-destructive mt-2 text-sm">{errorMessage}</div> : null}
+                    {isError && errorMessage ? (
+                        <div className="text-destructive mt-2 text-sm">{errorMessage}</div>
+                    ) : null}
                     {statusMessage ? <div className="text-destructive mt-2 text-sm">{statusMessage}</div> : null}
                 </div>
             </CardContent>

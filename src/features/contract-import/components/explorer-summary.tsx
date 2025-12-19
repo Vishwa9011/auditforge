@@ -43,4 +43,3 @@ export function ExplorerSummary({ data }: { data: EtherscanResponse }) {
         </div>
     );
 }
-

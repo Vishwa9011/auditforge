@@ -11,15 +11,7 @@ type CodePanelProps = {
     onChange?: (nextValue: string) => void;
 };
 
-export function CodePanel({
-    title,
-    filename,
-    value,
-    language,
-    height,
-    readOnly = true,
-    onChange,
-}: CodePanelProps) {
+export function CodePanel({ title, filename, value, language, height, readOnly = true, onChange }: CodePanelProps) {
     return (
         <div className="border-border overflow-hidden rounded-lg border">
             <div className="bg-muted/40 border-border flex items-center justify-between border-b px-3 py-2">
@@ -44,4 +36,3 @@ export function CodePanel({
         </div>
     );
 }
-
