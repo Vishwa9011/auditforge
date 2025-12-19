@@ -1,18 +1,15 @@
 import { cn } from '@/lib/utils';
 import type { CSSProperties } from 'react';
 
-import defaultIconUrl from '/assets/icons/code.svg';
+const iconsByKey: Record<string, string> = {
+    code: '/assets/icons/code.svg',
+    file: '/assets/icons/file.svg',
+    js: '/assets/icons/js.svg',
+    sol: '/assets/icons/sol.svg',
+    ts: '/assets/icons/ts.svg',
+};
 
-const iconModules = {
-    ...import.meta.glob('/assets/icons/*.svg', { eager: true, import: 'default' }),
-} as Record<string, string>;
-
-const iconsByKey = Object.entries(iconModules).reduce<Record<string, string>>((acc, [path, url]) => {
-    const match = /\/([^/]+)\.svg$/i.exec(path);
-    if (!match) return acc;
-    acc[match[1].toLowerCase()] = url;
-    return acc;
-}, {});
+const defaultIconUrl = iconsByKey.file;
 
 const extensionAliases: Record<string, string> = {
     jsx: 'js',
@@ -22,6 +19,7 @@ const extensionAliases: Record<string, string> = {
     mts: 'ts',
     cts: 'ts',
     sol: 'sol',
+    html: 'code',
 };
 
 function normalizeExtension(extension?: string | null) {
