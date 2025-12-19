@@ -44,9 +44,9 @@ export function EditorLayout() {
     }, [data?.content, setCurrentFileContent]);
 
     return (
-        <section className="h-full min-h-0 w-full overflow-hidden">
+        <section className="flex h-full min-h-0 w-full flex-col overflow-hidden">
             <EditorTabs />
-            <div className="h-full min-h-0 w-full overflow-hidden">
+            <div className="min-h-0 w-full flex-1 overflow-hidden">
                 {activeFilePath == null ? (
                     <EmptyEditorState />
                 ) : (

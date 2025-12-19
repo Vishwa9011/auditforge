@@ -1,6 +1,6 @@
 export function EmptyEditorState() {
     return (
-        <div className="flex h-full items-center justify-center">
+        <div className="flex h-full min-h-0 items-center justify-center">
             <div className="text-muted-foreground flex flex-col items-center gap-3">
                 <svg
                     className="h-20 w-20 opacity-10"

@@ -42,14 +42,16 @@ export function ImportPreviewCard({
                     <div className="grid gap-3">
                         <Skeleton className="h-6 w-1/3" />
                         <Skeleton className="h-4 w-1/2" />
-                        <Skeleton className="h-[280px] w-full" />
+                        <Skeleton className="h-70 w-full" />
                     </div>
                 ) : null}
 
                 {explorerData ? <ExplorerSummary data={explorerData} /> : null}
 
                 {warnings.length > 0 ? (
-                    <div className="text-muted-foreground rounded-md border px-3 py-2 text-sm">{warnings.join(' ')}</div>
+                    <div className="text-muted-foreground rounded-md border px-3 py-2 text-sm">
+                        {warnings.join(' ')}
+                    </div>
                 ) : null}
 
                 {importFiles.length === 0 ? (
@@ -77,7 +79,9 @@ export function ImportPreviewCard({
 
                             <div className="text-muted-foreground text-xs">
                                 Workspace:{' '}
-                                <span className="text-foreground font-medium">{selectedWorkspace ?? 'None selected'}</span>
+                                <span className="text-foreground font-medium">
+                                    {selectedWorkspace ?? 'None selected'}
+                                </span>
                             </div>
                             <div className="text-muted-foreground text-xs">
                                 Current folder: <span className="text-foreground font-medium">{cwd}</span>
