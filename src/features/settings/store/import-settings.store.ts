@@ -25,7 +25,7 @@ const DEFAULTS: Pick<
     ImportSettingsState,
     'etherscanApiKey' | 'defaultChainId' | 'destinationBase' | 'openAfterImport' | 'includeAbiJson' | 'includeMetaJson'
 > = {
-    etherscanApiKey: import.meta.env.VITE_ETHERSCAN_API_KEY || '',
+    etherscanApiKey: '',
     defaultChainId: 1,
     destinationBase: 'cwd',
     openAfterImport: true,

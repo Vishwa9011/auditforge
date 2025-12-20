@@ -1,10 +1,10 @@
 import OpenAI from 'openai';
 import type { ThinkingLevel } from '../config';
-import { zodResponseFormat } from 'openai/helpers/zod';
-import type { AnalyzeRequest, AnalyzeResult } from '../../types';
 import { AnalyzeResponseSchema } from '../schema';
 import { validatePromptSize } from '../validation';
 import { prepareAnalyzePrompts } from '../prepare';
+import { zodResponseFormat } from 'openai/helpers/zod';
+import type { AnalyzeRequest, AnalyzeResult } from '../../types';
 
 export type OpenAIProviderConfig = {
     apiKey?: string;
@@ -13,9 +13,7 @@ export type OpenAIProviderConfig = {
 };
 
 function resolveOpenAiApiKey(explicitApiKey?: string): string | undefined {
-    return (
-        explicitApiKey?.trim() || import.meta.env.VITE_OPENAI_API_KEY || import.meta.env.VITE_OPEN_API_KEY || undefined
-    );
+    return explicitApiKey?.trim() || '';
 }
 
 export async function analyzeWithOpenAI(input: AnalyzeRequest, config: OpenAIProviderConfig): Promise<AnalyzeResult> {
