@@ -13,11 +13,12 @@ type FileEditorStoreState = {
             path: string;
             ino: Ino;
             content: string;
-            updatedAtMs: number;
+            size: number;
+            mtimeMs: number;
         }
     >;
     unsavedInos: Set<Ino>;
-    upsertDraftContent: (ino: Ino, content: string, path?: string) => void;
+    upsertDraftContent: (ino: Ino, content: string, path: string) => void;
     markUnsaved: (ino: Ino) => void;
     clearUnsaved: (ino: Ino) => void;
     clearAllUnsaved: () => void;
@@ -45,22 +46,21 @@ export const useFileEditorStore = create<FileEditorStoreState>()(
                 state.unsavedInos.clear();
             });
         },
-        upsertDraftContent: (ino: Ino, content: string, path?: string) => {
+        upsertDraftContent: (ino: Ino, content: string, path: string) => {
             set(state => {
                 const existing = state.draftsByIno.get(ino);
                 if (existing) {
                     existing.content = content;
-                    existing.updatedAtMs = Date.now();
-                    if (path) {
-                        existing.path = path;
-                    }
+                    existing.mtimeMs = Date.now();
+                    existing.size = new TextEncoder().encode(content).length;
                     state.draftsByIno.set(ino, existing);
                 } else {
                     state.draftsByIno.set(ino, {
-                        path: path || `untitled-${ino}`,
+                        path: path,
                         ino,
-                        updatedAtMs: Date.now(),
+                        mtimeMs: Date.now(),
                         content,
+                        size: new TextEncoder().encode(content).length,
                     });
                 }
             });

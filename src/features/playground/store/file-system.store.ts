@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { enableMapSet } from 'immer';
 import { immer } from 'zustand/middleware/immer';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { FsNode, Ino } from '@features/playground/types';
+import type { FsNode, Ino, InodeMeta } from '@features/playground/types';
 import {
     DEFAULT_CWD,
     DEFAULT_WORKSPACE,
@@ -46,6 +46,7 @@ type FileSystemState = {
     createDir: (path: string, dirname: string) => void;
     renameNode: (path: string, newName: string) => void;
     deleteNode: (path: string) => void;
+    updateFileStats: (path: string, newSize: number) => void;
     setWorkspaceInitialized: (initialized: boolean) => void;
 };
 
@@ -184,6 +185,18 @@ export const useFileSystem = create<FileSystemState>()(
                         if (res.kind !== 'found') return;
                         if (!isDir(res.node)) return;
                         res.node.delete(name);
+                    });
+                },
+
+                updateFileStats: (path, newSize: number) => {
+                    set(state => {
+                        const res = resolvePath(path, state.fsTree);
+                        if (res.kind !== 'found') return;
+                        if (isDir(res.node)) return;
+
+                        const meta = res.node.get(META_KEY) as InodeMeta;
+                        meta.size = newSize;
+                        meta.mtimeMs = Date.now();
                     });
                 },
             };

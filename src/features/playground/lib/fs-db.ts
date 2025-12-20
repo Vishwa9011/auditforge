@@ -61,4 +61,5 @@ export async function readFileContent(ino: Ino) {
 export async function writeFileContent(ino: Ino, content: string) {
     const bytes = encoder.encode(content);
     await writeFileBytes(ino, bytes);
+    return bytes.length;
 }

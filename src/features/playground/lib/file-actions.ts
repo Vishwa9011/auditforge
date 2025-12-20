@@ -8,7 +8,7 @@ export async function saveFileByIno(ino: Ino) {
     const draft = draftsByIno.get(ino);
     if (!draft) return false;
 
-    await writeFileContent(ino, draft.content);
+    await updateFileContentAndSize(draft.path, ino, draft.content);
     clearUnsaved(ino);
     return true;
 }
@@ -53,7 +53,17 @@ export const createFileWithContent = async (path: string, content: string) => {
         return false;
     }
 
-    await writeFileContent(res.meta.ino, content);
+    await updateFileContentAndSize(path, res.meta.ino, content);
 
     return true;
+};
+
+/**
+ * @param path Path of the file to update (required)
+ * @param ino Inode number of the file to update (required)
+ * @param newContent New content to write to the file (required)
+ */
+export const updateFileContentAndSize = async (path: string, ino: Ino, newContent: string) => {
+    const size = await writeFileContent(ino, newContent);
+    useFileSystem.getState().updateFileStats(path, size);
 };

@@ -33,7 +33,7 @@ export function CodeEditor({ path, content, meta, extension }: CodeEditorProps) 
 
     function handleEditorChange(value?: string) {
         if (meta && value !== undefined) {
-            debouncedUpsertDraftContent(meta.ino, value, path || undefined);
+            debouncedUpsertDraftContent(meta.ino, value, path);
             const baselineContent = content ?? '';
             if (value === baselineContent) {
                 if (unsavedInos.has(meta.ino)) useFileEditorStore.getState().clearUnsaved(meta.ino);
@@ -125,7 +125,7 @@ export function CodeEditor({ path, content, meta, extension }: CodeEditorProps) 
         const upsertDraftContent = useFileEditorStore.getState().upsertDraftContent;
         if (meta && content !== undefined && content !== null) {
             if (draftContent == null) {
-                upsertDraftContent(meta.ino, content, path || undefined);
+                upsertDraftContent(meta.ino, content, path);
             }
         }
     }, [content, meta, draftContent, path]);
