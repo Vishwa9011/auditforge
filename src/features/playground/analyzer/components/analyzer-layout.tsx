@@ -1,6 +1,5 @@
-import { analyzeWithLlm } from '../llm';
-import { useState } from 'react';
 import { Analyzer } from './analyzer';
+import { analyzeWithLlm } from '../llm';
 import { useFileSystem } from '../../store';
 import { readFileContent } from '../../lib';
 import type { AnalyzeResult } from '../types';
@@ -9,12 +8,16 @@ import { useMutation } from '@tanstack/react-query';
 import { resolveFilename, resolvePath } from '../../store/file-system';
 
 export function AnalyzerLayout() {
-    const [data, setData] = useState<AnalyzeResult | null>(null);
     const { activeFile } = useFileSystem();
 
     const analyzeMutation = useMutation({
         mutationFn: async () => {
-            if (!activeFile) return;
+            if (!activeFile) {
+                return {
+                    ok: false,
+                    error: 'No active file to analyze.' as any,
+                } as AnalyzeResult;
+            }
             const r = resolvePath(activeFile);
             if (r.kind !== 'found') {
                 console.error('File not found in FS:', activeFile);
@@ -34,14 +37,6 @@ export function AnalyzerLayout() {
 
             return res;
         },
-
-        onSuccess: data => {
-            setData(data as AnalyzeResult);
-            console.log('Analysis result:', data);
-        },
-        onError: error => {
-            console.error('Analysis error:', error);
-        },
     });
 
     return (
@@ -50,7 +45,12 @@ export function AnalyzerLayout() {
                 <AnalyzerHeader isAnalyzing={analyzeMutation.isPending} onAnalyze={analyzeMutation.mutate} />
             </div>
             <div className="min-h-0 flex-1 overflow-auto">
-                <Analyzer isAnalyzing={analyzeMutation.isPending} data={data} />
+                <Analyzer
+                    isPending={analyzeMutation.isPending}
+                    isError={analyzeMutation.isError}
+                    data={analyzeMutation.data}
+                    error={analyzeMutation.error}
+                />
             </div>
         </div>
     );

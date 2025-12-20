@@ -48,7 +48,6 @@ export const createFileWithContent = async (path: string, content: string) => {
     createFile(split.parentPath, split.name);
 
     const res = resolvePath(path, useFileSystem.getState().fsTree);
-    console.log('res: ', res);
     if (res.kind !== 'found') {
         console.error('Failed to create file at', `${path}/${split.name}`);
         return false;

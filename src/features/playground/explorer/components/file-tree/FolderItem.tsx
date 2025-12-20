@@ -109,12 +109,12 @@ export const FolderItem = memo(function FolderItem({ name, path, children }: Fol
                         <div className="flex min-w-0 flex-1 cursor-pointer items-center gap-1.5">
                             <ChevronRight
                                 className={cn(
-                                    'text-muted-foreground size-4 transition-transform',
+                                    'text-muted-foreground size-4 min-w-4 transition-transform',
                                     isOpen && 'rotate-90',
                                 )}
                             />
                             <FolderIcon
-                                className="size-4 transition-all"
+                                className="size-4 min-w-4 transition-all"
                                 fill="#E3B341"
                                 fillOpacity={0.75}
                                 stroke={isOpen ? '#8F6B1F' : '#B8964E'}

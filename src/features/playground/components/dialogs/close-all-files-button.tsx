@@ -12,7 +12,7 @@ import { saveAllUnsavedFiles } from '@features/playground/lib';
 import { useFileEditorStore, useFileSystem } from '@features/playground/store';
 import { TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
-import { useToggle } from '@features/playground/hooks';
+import { useToggle, useUiToggle } from '@features/playground/hooks';
 
 function getCloseAllTabsTriggerTitle({
     title,
@@ -46,6 +46,7 @@ export function CloseAllFilesButton({
     isTriggerButton = true,
     action,
 }: CloseAllFilesButtonProps) {
+    const analyzerPanel = useUiToggle('analyzer-panel');
     const [uncontrolledOpen, setUncontrolledOpen] = useToggle(false);
     const [isWorking, setIsWorking] = useState(false);
 
@@ -61,6 +62,7 @@ export function CloseAllFilesButton({
 
     const isControlled = typeof isOpen === 'boolean';
     const dialogOpen = isControlled ? isOpen : uncontrolledOpen;
+
     const setDialogOpen = (nextOpen: boolean) => {
         onOpenChange?.(nextOpen);
         if (!isControlled) {
@@ -78,6 +80,7 @@ export function CloseAllFilesButton({
         }
         closeAllFiles();
         action?.();
+        if (analyzerPanel.isEnabled) analyzerPanel.toggle(false);
     };
 
     const handleSaveAllAndClose = async () => {
@@ -87,6 +90,7 @@ export function CloseAllFilesButton({
             closeAllFiles();
             setDialogOpen(false);
             action?.();
+            if (analyzerPanel.isEnabled) analyzerPanel.toggle(false);
         } finally {
             setIsWorking(false);
         }
@@ -97,6 +101,7 @@ export function CloseAllFilesButton({
         closeAllFiles();
         setDialogOpen(false);
         action?.();
+        if (analyzerPanel.isEnabled) analyzerPanel.toggle(false);
     };
 
     const handleDialogOpenChange = (nextOpen: boolean) => {

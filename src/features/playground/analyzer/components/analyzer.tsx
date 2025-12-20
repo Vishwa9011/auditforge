@@ -3,12 +3,14 @@ import { AnalysisReport } from './report/report';
 import { AnalyzerEmptyState, AnalyzerErrorState, AnalyzerLoadingState } from './analyzer-states';
 
 type AnalyzerProps = {
-    isAnalyzing: boolean;
-    data: AnalyzeResult | null;
+    isPending: boolean;
+    isError: boolean;
+    error: unknown;
+    data?: AnalyzeResult;
 };
 
-export function Analyzer({ data, isAnalyzing }: AnalyzerProps) {
-    if (isAnalyzing && !data) {
+export function Analyzer({ data, isPending }: AnalyzerProps) {
+    if (isPending && !data) {
         return <AnalyzerLoadingState />;
     }
 

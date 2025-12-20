@@ -16,7 +16,7 @@ function Index() {
     return (
         <div className="h-full w-full overflow-hidden">
             <ResizablePanelGroup direction="horizontal" className="min-h-0">
-                <ResizablePanel defaultSize={20} className="min-h-0 max-w-[70%]" hidden={!isEnabled}>
+                <ResizablePanel defaultSize={20} minSize={15} className="min-h-0 max-w-[70%]" hidden={!isEnabled}>
                     <FileExplorer />
                 </ResizablePanel>
                 <ResizableHandle />
