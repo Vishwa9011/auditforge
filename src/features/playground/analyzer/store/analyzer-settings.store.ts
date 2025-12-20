@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { LlmProvider, ThinkingLevel } from '../llm/config';
-import { clampThinkingLevel, getDefaultModel } from '../llm/config';
+import * as llmConfig from '../llm/config';
 
 type AnalyzerSettingsState = {
     provider: LlmProvider;
@@ -20,18 +20,20 @@ type AnalyzerSettingsState = {
     reset: () => void;
 };
 
+const DEFAULT_MODEL_BY_PROVIDER: AnalyzerSettingsState['modelByProvider'] = {
+    ollama: llmConfig.getDefaultModelSuggestion('ollama').id,
+    openai: llmConfig.getDefaultModelSuggestion('openai').id,
+};
+
 const DEFAULTS: Pick<
     AnalyzerSettingsState,
     'provider' | 'modelByProvider' | 'thinkingLevel' | 'openaiApiKey' | 'ollamaHost'
 > = {
-    provider: 'ollama',
-    modelByProvider: {
-        ollama: getDefaultModel('ollama'),
-        openai: getDefaultModel('openai'),
-    },
-    thinkingLevel: 'medium',
+    provider: llmConfig.DEFAULT_PROVIDER,
+    modelByProvider: { ...DEFAULT_MODEL_BY_PROVIDER },
+    thinkingLevel: llmConfig.getDefaultModelSuggestion(llmConfig.DEFAULT_PROVIDER).defaultThinkingLevel || 'low',
     openaiApiKey: '',
-    ollamaHost: 'http://localhost:11434',
+    ollamaHost: llmConfig.DEFAULT_OLLAMA_HOST,
 };
 
 export const useAnalyzerSettings = create<AnalyzerSettingsState>()(
@@ -42,27 +44,28 @@ export const useAnalyzerSettings = create<AnalyzerSettingsState>()(
             setProvider: provider => {
                 set(state => {
                     state.provider = provider;
-                    if (!state.modelByProvider[provider]) state.modelByProvider[provider] = getDefaultModel(provider);
-                    state.thinkingLevel = clampThinkingLevel(
-                        provider,
-                        state.modelByProvider[provider],
-                        state.thinkingLevel,
-                    );
+                    const fallbackModelId = llmConfig.getDefaultModelSuggestion(provider).id.trim();
+                    const modelId = state.modelByProvider[provider]?.trim() || fallbackModelId;
+                    state.modelByProvider[provider] = modelId;
+                    state.thinkingLevel = llmConfig.clampThinkingLevel(provider, modelId, state.thinkingLevel);
                 });
             },
 
             setModel: model => {
                 const { provider } = get();
                 set(state => {
-                    state.modelByProvider[provider] = model;
-                    state.thinkingLevel = clampThinkingLevel(provider, model, state.thinkingLevel);
+                    const normalized = model.trim();
+                    const modelId = normalized || llmConfig.getDefaultModelSuggestion(provider).id.trim();
+                    state.modelByProvider[provider] = modelId;
+                    state.thinkingLevel = llmConfig.clampThinkingLevel(provider, modelId, state.thinkingLevel);
                 });
             },
 
             setThinkingLevel: level => {
                 const { provider, modelByProvider } = get();
+                const modelId = modelByProvider[provider] ?? '';
                 set(state => {
-                    state.thinkingLevel = clampThinkingLevel(provider, modelByProvider[provider], level);
+                    state.thinkingLevel = llmConfig.clampThinkingLevel(provider, modelId, level);
                 });
             },
 
@@ -81,7 +84,7 @@ export const useAnalyzerSettings = create<AnalyzerSettingsState>()(
             reset: () => {
                 set(state => {
                     state.provider = DEFAULTS.provider;
-                    state.modelByProvider = DEFAULTS.modelByProvider;
+                    state.modelByProvider = { ...DEFAULT_MODEL_BY_PROVIDER };
                     state.thinkingLevel = DEFAULTS.thinkingLevel;
                     state.openaiApiKey = DEFAULTS.openaiApiKey;
                     state.ollamaHost = DEFAULTS.ollamaHost;
@@ -90,8 +93,39 @@ export const useAnalyzerSettings = create<AnalyzerSettingsState>()(
         })),
         {
             name: 'analyzer-settings',
-            version: 1,
+            version: 2,
             storage: createJSONStorage(() => localStorage),
+            migrate: (persistedState, version) => {
+                if (version !== 1) return persistedState as AnalyzerSettingsState;
+
+                const prev = persistedState as Partial<
+                    Omit<AnalyzerSettingsState, 'modelByProvider'> & { model?: string }
+                >;
+
+                const provider = prev.provider ?? DEFAULTS.provider;
+                const fallbackModelId = DEFAULT_MODEL_BY_PROVIDER[provider];
+                const migratedModelId =
+                    typeof prev.model === 'string' && prev.model.trim() ? prev.model.trim() : fallbackModelId;
+                const modelByProvider: AnalyzerSettingsState['modelByProvider'] = {
+                    ...DEFAULT_MODEL_BY_PROVIDER,
+                    [provider]: migratedModelId,
+                };
+
+                const modelId = modelByProvider[provider] ?? '';
+                const thinkingLevel = llmConfig.clampThinkingLevel(
+                    provider,
+                    modelId,
+                    prev.thinkingLevel ?? DEFAULTS.thinkingLevel,
+                );
+
+                return {
+                    ...DEFAULTS,
+                    ...prev,
+                    provider,
+                    modelByProvider,
+                    thinkingLevel,
+                };
+            },
         },
     ),
 );

@@ -1,10 +1,10 @@
 import { Ollama } from 'ollama/browser';
 import type { ThinkingLevel } from '../config';
-import { buildSystemPrompt, buildUserPrompt } from '../prompt';
 import type { AnalyzeRequest, AnalyzeResult } from '../../types';
 import { zodToJsonSchema } from 'zod-to-json-schema';
-import { AnalyzeRequestSchema, AnalyzeResponseSchema } from '../schema';
+import { AnalyzeResponseSchema } from '../schema';
 import { validatePromptSize } from '../validation';
+import { prepareAnalyzePrompts } from '../prepare';
 
 export type OllamaProviderConfig = {
     host: string;
@@ -26,38 +26,36 @@ export const analyzeWithOllama = async (
     input: AnalyzeRequest,
     config: OllamaProviderConfig,
 ): Promise<AnalyzeResult> => {
-    const parsedInput = AnalyzeRequestSchema.safeParse(input);
-    if (!parsedInput.success) {
-        return { ok: false, error: parsedInput.error };
+    const prepared = prepareAnalyzePrompts(input, config.thinkingLevel);
+    if (!prepared.ok) {
+        return { ok: false, error: prepared.error };
     }
 
-    const validatePrompt = validatePromptSize(parsedInput.data.file.content, 'ollama');
-    if (!validatePrompt.ok) {
-        return { ok: false, error: validatePrompt.error };
-    }
-
-    const host = config.host.trim() || 'http://localhost:11434';
+    const host = config.host.trim();
     const model = config.model.trim();
+    if (!host) return { ok: false, error: 'Missing Ollama host' };
     if (!model) return { ok: false, error: 'Missing Ollama model name' };
 
-    const systemPrompt = buildSystemPrompt(config.thinkingLevel);
-    const prompt = buildUserPrompt(parsedInput.data);
+    const promptCheck = validatePromptSize(prepared.data.promptForValidation, 'ollama');
+    if (!promptCheck.ok) {
+        return { ok: false, error: promptCheck.error };
+    }
 
     let response;
     try {
         response = await getOllamaClient(host).chat({
             model,
             messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: prompt },
+                { role: 'system', content: prepared.data.systemPrompt },
+                { role: 'user', content: prepared.data.userPrompt },
             ],
             format: zodToJsonSchema(AnalyzeResponseSchema),
             options: {
                 temperature: 0.1,
             },
         });
-    } catch {
-        return { ok: false, error: 'Failed to get response from Ollama model' };
+    } catch (error) {
+        return { ok: false, error };
     }
 
     let json: unknown;
@@ -69,7 +67,7 @@ export const analyzeWithOllama = async (
 
     const parsedResponse = AnalyzeResponseSchema.safeParse(json);
     if (!parsedResponse.success) {
-        return { ok: false, error: 'Model response did not match schema' };
+        return { ok: false, error: parsedResponse.error };
     }
 
     return { ok: true, data: parsedResponse.data };

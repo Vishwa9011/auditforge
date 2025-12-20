@@ -1,4 +1,4 @@
-import { llm } from '../llm';
+import { analyzeWithLlm } from '../llm';
 import { useState } from 'react';
 import { Analyzer } from './analyzer';
 import { useFileSystem } from '../../store';
@@ -23,7 +23,7 @@ export function AnalyzerLayout() {
 
             const fileContent = await readFileContent(r.meta.ino);
 
-            const res = await llm({
+            const res = await analyzeWithLlm({
                 language: 'solidity',
                 scope: 'file',
                 file: {

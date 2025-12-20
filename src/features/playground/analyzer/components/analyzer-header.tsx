@@ -1,12 +1,12 @@
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
-import { Bot, Brain, Check, ChevronDown, Cpu, Loader2, Play, Settings2, Shapes } from 'lucide-react';
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-import { MODEL_SUGGESTIONS, THINKING_LEVELS, getAllowedThinkingLevels, type ThinkingLevel } from '../llm/config';
+import { Button } from '@/components/ui/button';
 import { useAnalyzerSettings } from '../store/analyzer-settings.store';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { Bot, Brain, Check, ChevronDown, Cpu, Loader2, Play, Settings2, Shapes } from 'lucide-react';
+import { THINKING_LEVELS, getAllowedThinkingLevels, getModelSuggestions, type ThinkingLevel } from '../llm/config';
 
 type AnalyzerHeaderProps = {
     isAnalyzing: boolean;
@@ -21,13 +21,16 @@ const HeaderPopoverContext = createContext<HeaderPopoverContextValue | null>(nul
 
 export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) {
     const { provider, modelByProvider, thinkingLevel, setProvider, setModel, setThinkingLevel } = useAnalyzerSettings();
+    const modelId = modelByProvider[provider] ?? '';
 
     const icon = isAnalyzing ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />;
-    const model = modelByProvider[provider] ?? '';
-    const allowedThinkingLevels = getAllowedThinkingLevels(provider, model);
-    const suggestedModels = MODEL_SUGGESTIONS[provider];
-    const hasModelInSuggestions = suggestedModels.some(m => m.id === model);
-
+    const allowedThinkingLevels = getAllowedThinkingLevels(provider, modelId);
+    const suggestions = getModelSuggestions(provider);
+    const hasCurrentModel = modelId.trim() && suggestions.some(m => m.id === modelId.trim());
+    const models =
+        hasCurrentModel || !modelId.trim()
+            ? suggestions
+            : [{ id: modelId.trim(), label: `Custom: ${modelId.trim()}`, provider }, ...suggestions];
     return (
         <div className="flex h-10 items-center justify-between gap-4 border-b px-2">
             <div className="flex items-center gap-2 text-sm font-medium">
@@ -58,13 +61,8 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
                     icon={<Shapes className="size-4" />}
                 >
                     <PopoverTitle>Select model</PopoverTitle>
-                    {!hasModelInSuggestions && model.trim() ? (
-                        <PopoverItem selected onSelect={() => setModel(model)}>
-                            {`Custom: ${model}`}
-                        </PopoverItem>
-                    ) : null}
-                    {suggestedModels.map(m => (
-                        <PopoverItem key={m.id} selected={m.id === model} onSelect={() => setModel(m.id)}>
+                    {models.map(m => (
+                        <PopoverItem key={m.id} selected={m.id === modelId} onSelect={() => setModel(m.id)}>
                             {m.label}
                         </PopoverItem>
                     ))}
@@ -112,7 +110,7 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
                     <TooltipTrigger asChild>
                         <Button
                             variant="outline"
-                            className="h-7 !px-2 text-sm"
+                            className="h-7 px-2! text-sm"
                             onClick={onAnalyze}
                             disabled={isAnalyzing}
                         >

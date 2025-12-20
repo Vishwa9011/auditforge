@@ -1,9 +1,10 @@
 import OpenAI from 'openai';
-import type { AnalyzeRequest, AnalyzeResult } from '../../types';
-import { buildSystemPrompt, buildUserPrompt } from '../prompt';
-import { zodResponseFormat } from 'openai/helpers/zod';
-import { AnalyzeRequestSchema, AnalyzeResponseSchema } from '../schema';
 import type { ThinkingLevel } from '../config';
+import { zodResponseFormat } from 'openai/helpers/zod';
+import type { AnalyzeRequest, AnalyzeResult } from '../../types';
+import { AnalyzeResponseSchema } from '../schema';
+import { validatePromptSize } from '../validation';
+import { prepareAnalyzePrompts } from '../prepare';
 
 export type OpenAIProviderConfig = {
     apiKey?: string;
@@ -11,46 +12,65 @@ export type OpenAIProviderConfig = {
     thinkingLevel: ThinkingLevel;
 };
 
+function resolveOpenAiApiKey(explicitApiKey?: string): string | undefined {
+    return (
+        explicitApiKey?.trim() || import.meta.env.VITE_OPENAI_API_KEY || import.meta.env.VITE_OPEN_API_KEY || undefined
+    );
+}
+
 export async function analyzeWithOpenAI(input: AnalyzeRequest, config: OpenAIProviderConfig): Promise<AnalyzeResult> {
-    const parsedInput = AnalyzeRequestSchema.safeParse(input);
-    if (!parsedInput.success) {
-        return { ok: false, error: parsedInput.error };
+    const prepared = prepareAnalyzePrompts(input, config.thinkingLevel);
+    if (!prepared.ok) {
+        return { ok: false, error: prepared.error };
     }
 
-    const apiKey = config.apiKey || import.meta.env.VITE_OPEN_API_KEY;
+    const apiKey = resolveOpenAiApiKey(config.apiKey);
     if (!apiKey) {
         return {
             ok: false,
-            error: 'Missing OpenAI API key (set it in Analyzer settings or VITE_OPEN_API_KEY)',
+            error: 'Missing OpenAI API key (set it in Analyzer settings, VITE_OPENAI_API_KEY, or VITE_OPEN_API_KEY)',
         };
     }
 
+    const model = config.model.trim();
+    if (!model) return { ok: false, error: 'Missing OpenAI model name' };
+
     const client = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
 
-    const systemPrompt = buildSystemPrompt(config.thinkingLevel);
-    const prompt = buildUserPrompt(parsedInput.data);
+    const promptCheck = validatePromptSize(prepared.data.promptForValidation, 'openai');
+    if (!promptCheck.ok) {
+        return { ok: false, error: promptCheck.error };
+    }
 
-    let output;
     try {
         const response = await client.chat.completions.create({
-            model: config.model,
+            model,
             messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: prompt },
+                { role: 'system', content: prepared.data.systemPrompt },
+                { role: 'user', content: prepared.data.userPrompt },
             ],
+
             temperature: 0.1,
-            // max_tokens: MAX_TOKENS_BY_THINKING[config.thinkingLevel],
             response_format: zodResponseFormat(AnalyzeResponseSchema, 'analyze_response_schema'),
         });
-        output = JSON.parse(response.choices[0].message.content || '');
+
+        const content = response.choices[0]?.message?.content;
+        if (!content) return { ok: false, error: 'OpenAI returned an empty response' };
+
+        let json: unknown;
+        try {
+            json = JSON.parse(content);
+        } catch (error) {
+            return { ok: false, error };
+        }
+
+        const parsed = AnalyzeResponseSchema.safeParse(json);
+        if (!parsed.success) {
+            return { ok: false, error: parsed.error };
+        }
+
+        return { ok: true, data: parsed.data };
     } catch (error) {
         return { ok: false, error };
     }
-
-    const parsedOutput = AnalyzeResponseSchema.safeParse(output);
-    if (!parsedOutput.success) {
-        return { ok: false, error: parsedOutput.error };
-    }
-
-    return { ok: true, data: parsedOutput.data };
 }

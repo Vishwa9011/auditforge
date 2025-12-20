@@ -1,14 +1,17 @@
-import { MAX_TOKENS_LIMIT, type LlmProvider } from './config';
+import { MAX_PROMPT_TOKENS_BY_PROVIDER, type LlmProvider } from './config';
 
-export function validatePromptSize(prompt: string, llm: LlmProvider) {
-    const promptLength = prompt.length;
+function estimateTokensFromText(text: string): number {
+    return Math.ceil(text.length / 4);
+}
 
-    const maxTokenAllowed = MAX_TOKENS_LIMIT[llm];
+export function validatePromptSize(prompt: string, provider: LlmProvider) {
+    const estimatedTokens = estimateTokensFromText(prompt);
+    const maxTokenAllowed = MAX_PROMPT_TOKENS_BY_PROVIDER[provider];
 
-    if (promptLength > maxTokenAllowed) {
+    if (estimatedTokens > maxTokenAllowed) {
         return {
             ok: false,
-            error: `Prompt size exceeds the maximum token limit of ${maxTokenAllowed} for ${llm} provider. Current size: ${promptLength} tokens. Please reduce the prompt size.`,
+            error: `Prompt exceeds the ${provider} limit (${maxTokenAllowed} tokens). Estimated: ${estimatedTokens} tokens (${prompt.length} chars).`,
         };
     }
 
