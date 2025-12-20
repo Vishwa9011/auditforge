@@ -478,13 +478,11 @@ function AnalyzerSettingsSection() {
         modelByProvider,
         thinkingLevel,
         openaiApiKey,
-        openaiBaseUrl,
         ollamaHost,
         setProvider,
         setModel,
         setThinkingLevel,
         setOpenaiApiKey,
-        setOpenaiBaseUrl,
         setOllamaHost,
         reset,
     } = useAnalyzerSettings();
@@ -559,15 +557,6 @@ function AnalyzerSettingsSection() {
                                 onChange={e => setOpenaiApiKey(e.target.value)}
                             />
                             <p className="text-muted-foreground text-xs">Stored locally in your browser.</p>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label>OpenAI base URL (optional)</Label>
-                            <Input
-                                placeholder="https://api.openai.com/v1"
-                                value={openaiBaseUrl}
-                                onChange={e => setOpenaiBaseUrl(e.target.value)}
-                            />
                         </div>
 
                         <div className="space-y-2">

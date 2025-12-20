@@ -10,21 +10,19 @@ type AnalyzerSettingsState = {
     thinkingLevel: ThinkingLevel;
 
     openaiApiKey: string;
-    openaiBaseUrl: string;
     ollamaHost: string;
 
     setProvider: (provider: LlmProvider) => void;
     setModel: (model: string) => void;
     setThinkingLevel: (level: ThinkingLevel) => void;
     setOpenaiApiKey: (apiKey: string) => void;
-    setOpenaiBaseUrl: (baseUrl: string) => void;
     setOllamaHost: (host: string) => void;
     reset: () => void;
 };
 
 const DEFAULTS: Pick<
     AnalyzerSettingsState,
-    'provider' | 'modelByProvider' | 'thinkingLevel' | 'openaiApiKey' | 'openaiBaseUrl' | 'ollamaHost'
+    'provider' | 'modelByProvider' | 'thinkingLevel' | 'openaiApiKey' | 'ollamaHost'
 > = {
     provider: 'ollama',
     modelByProvider: {
@@ -33,7 +31,6 @@ const DEFAULTS: Pick<
     },
     thinkingLevel: 'medium',
     openaiApiKey: '',
-    openaiBaseUrl: '',
     ollamaHost: 'http://localhost:11434',
 };
 
@@ -75,12 +72,6 @@ export const useAnalyzerSettings = create<AnalyzerSettingsState>()(
                 });
             },
 
-            setOpenaiBaseUrl: baseUrl => {
-                set(state => {
-                    state.openaiBaseUrl = baseUrl;
-                });
-            },
-
             setOllamaHost: host => {
                 set(state => {
                     state.ollamaHost = host;
@@ -93,7 +84,6 @@ export const useAnalyzerSettings = create<AnalyzerSettingsState>()(
                     state.modelByProvider = DEFAULTS.modelByProvider;
                     state.thinkingLevel = DEFAULTS.thinkingLevel;
                     state.openaiApiKey = DEFAULTS.openaiApiKey;
-                    state.openaiBaseUrl = DEFAULTS.openaiBaseUrl;
                     state.ollamaHost = DEFAULTS.ollamaHost;
                 });
             },

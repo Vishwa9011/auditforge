@@ -1,7 +1,8 @@
 import type { AnalyzeRequest, AnalyzeResult } from '../types';
 import { analyzeWithOllama } from './providers/ollama';
 import { analyzeWithOpenAI } from './providers/openai';
-import type { LlmProvider, ThinkingLevel } from './config';
+import { getDefaultModel, type LlmProvider, type ThinkingLevel } from './config';
+import { useAnalyzerSettings } from '../store/analyzer-settings.store';
 
 export type LlmRunConfig = {
     provider: LlmProvider;
@@ -16,7 +17,23 @@ export type LlmRunConfig = {
     };
 };
 
-export async function llm(config: LlmRunConfig, input: AnalyzeRequest): Promise<AnalyzeResult> {
+export async function llm(input: AnalyzeRequest): Promise<AnalyzeResult> {
+    const { provider, modelByProvider, thinkingLevel, openaiApiKey, ollamaHost } = useAnalyzerSettings.getState();
+
+    const activeModel = modelByProvider[provider] || '';
+
+    const config: LlmRunConfig = {
+        provider,
+        model: activeModel.trim() || getDefaultModel(provider),
+        thinkingLevel,
+        openai: {
+            apiKey: openaiApiKey.trim() || undefined,
+        },
+        ollama: {
+            host: ollamaHost.trim() || undefined,
+        },
+    };
+
     switch (config.provider) {
         case 'ollama': {
             return await analyzeWithOllama(input, {
@@ -28,7 +45,6 @@ export async function llm(config: LlmRunConfig, input: AnalyzeRequest): Promise<
         case 'openai': {
             return await analyzeWithOpenAI(input, {
                 apiKey: config.openai?.apiKey,
-                baseURL: config.openai?.baseURL,
                 model: config.model,
                 thinkingLevel: config.thinkingLevel,
             });

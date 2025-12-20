@@ -7,13 +7,10 @@ import type { AnalyzeResult } from '../types';
 import { AnalyzerHeader } from './analyzer-header';
 import { useMutation } from '@tanstack/react-query';
 import { resolveFilename, resolvePath } from '../../store/file-system';
-import { useAnalyzerSettings } from '../store/analyzer-settings.store';
-import { getDefaultModel } from '../llm/config';
 
 export function AnalyzerLayout() {
     const [data, setData] = useState<AnalyzeResult | null>(null);
     const { activeFile } = useFileSystem();
-    const { provider, modelByProvider, thinkingLevel, openaiApiKey, openaiBaseUrl, ollamaHost } = useAnalyzerSettings();
 
     const analyzeMutation = useMutation({
         mutationFn: async () => {
@@ -26,29 +23,14 @@ export function AnalyzerLayout() {
 
             const fileContent = await readFileContent(r.meta.ino);
 
-            const activeModel = modelByProvider[provider] ?? '';
-            const res = await llm(
-                {
-                    provider,
-                    model: activeModel.trim() || getDefaultModel(provider),
-                    thinkingLevel,
-                    openai: {
-                        apiKey: openaiApiKey.trim() || undefined,
-                        baseURL: openaiBaseUrl.trim() || undefined,
-                    },
-                    ollama: {
-                        host: ollamaHost.trim() || undefined,
-                    },
+            const res = await llm({
+                language: 'solidity',
+                scope: 'file',
+                file: {
+                    name: resolveFilename(activeFile) || 'unknown.sol',
+                    content: fileContent,
                 },
-                {
-                    language: 'solidity',
-                    scope: 'file',
-                    file: {
-                        name: resolveFilename(activeFile) || 'unknown.sol',
-                        content: fileContent,
-                    },
-                },
-            );
+            });
 
             return res;
         },

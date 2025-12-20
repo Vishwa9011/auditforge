@@ -1,9 +1,10 @@
 import { Ollama } from 'ollama/browser';
+import type { ThinkingLevel } from '../config';
 import { buildSystemPrompt, buildUserPrompt } from '../prompt';
 import type { AnalyzeRequest, AnalyzeResult } from '../../types';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { AnalyzeRequestSchema, AnalyzeResponseSchema } from '../schema';
-import type { ThinkingLevel } from '../config';
+import { validatePromptSize } from '../validation';
 
 export type OllamaProviderConfig = {
     host: string;
@@ -21,12 +22,6 @@ function getOllamaClient(host: string): Ollama {
     return created;
 }
 
-const NUM_PREDICT_BY_THINKING: Record<ThinkingLevel, number> = {
-    low: 1200,
-    medium: 2200,
-    high: 3400,
-};
-
 export const analyzeWithOllama = async (
     input: AnalyzeRequest,
     config: OllamaProviderConfig,
@@ -34,6 +29,11 @@ export const analyzeWithOllama = async (
     const parsedInput = AnalyzeRequestSchema.safeParse(input);
     if (!parsedInput.success) {
         return { ok: false, error: parsedInput.error };
+    }
+
+    const validatePrompt = validatePromptSize(parsedInput.data.file.content, 'ollama');
+    if (!validatePrompt.ok) {
+        return { ok: false, error: validatePrompt.error };
     }
 
     const host = config.host.trim() || 'http://localhost:11434';
@@ -54,7 +54,6 @@ export const analyzeWithOllama = async (
             format: zodToJsonSchema(AnalyzeResponseSchema),
             options: {
                 temperature: 0.1,
-                num_predict: NUM_PREDICT_BY_THINKING[config.thinkingLevel],
             },
         });
     } catch {
