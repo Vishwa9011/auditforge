@@ -6,7 +6,6 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 
 export function PlaygroundLayout() {
     const isAnalyzerOpen = useUiToggle('analyzer-panel').isEnabled;
-    console.log('isAnalyzerOpen: ', isAnalyzerOpen);
 
     return (
         <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">

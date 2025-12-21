@@ -6,6 +6,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import type { editor } from 'monaco-editor';
 import { configureMonaco, DEFAULT_EDITOR_OPTIONS, getEditorLanguage, getFontFamilyCssVar } from '../editor-config';
 import { useEditorSettings } from '@features/settings/store/editor-settings.store';
+import { useTheme } from 'next-themes';
 
 type CodeEditorProps = {
     content?: string | null;
@@ -17,6 +18,7 @@ type CodeEditorProps = {
 export function CodeEditor({ path, content, meta, extension }: CodeEditorProps) {
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
     const monacoRef = useRef<Monaco | null>(null);
+    const { resolvedTheme } = useTheme();
     const { fontFamily, fontSize, lineHeight, fontLigatures, lineNumbers, wordWrap, minimap } = useEditorSettings();
     const modelPath = useMemo(() => {
         // Monaco's TS/JS worker decides "script kind" from the model URI (e.g. *.ts vs *.js).
@@ -56,6 +58,7 @@ export function CodeEditor({ path, content, meta, extension }: CodeEditorProps) 
     const effectiveEditorOptions: editor.IStandaloneEditorConstructionOptions = useMemo(
         () => ({
             ...DEFAULT_EDITOR_OPTIONS,
+            theme: resolvedTheme === 'dark' ? 'vs-dark' : 'vs-light',
             fontFamily: getFontFamilyCssVar(fontFamily),
             fontSize,
             lineHeight,
@@ -86,8 +89,11 @@ export function CodeEditor({ path, content, meta, extension }: CodeEditorProps) 
             },
             // Smooth cursor
             cursorSmoothCaretAnimation: 'on',
+            scrollbar: {
+                horizontal: 'auto',
+            },
         }),
-        [fontFamily, fontSize, lineHeight, fontLigatures, lineNumbers, wordWrap, minimap],
+        [fontFamily, fontSize, lineHeight, fontLigatures, lineNumbers, wordWrap, minimap, resolvedTheme],
     );
 
     function updateEditorLanguage() {

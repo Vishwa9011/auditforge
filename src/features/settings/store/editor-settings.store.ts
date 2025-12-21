@@ -31,7 +31,7 @@ const DEFAULTS: Pick<
     lineHeight: 20,
     fontLigatures: true,
     lineNumbers: true,
-    wordWrap: true,
+    wordWrap: false,
     minimap: true,
 };
 

@@ -1,40 +1,39 @@
 export const WELCOME_FILE_CONTENT = `
 AUDITFORGE
-AI-assisted analysis for smart contracts & source code
+AI-assisted analysis for smart contracts and source code
 
-════════════════════════════════════════════════════════════
+START HERE
+1) Open the File Explorer (left)
+2) Create a file and paste code
+3) Run analysis
 
-Getting Started
+SHORTCUTS
+Open file / command palette:  Mac Cmd+P   Windows/Linux Ctrl+P
+Save:                         Mac Cmd+S   Windows/Linux Ctrl+S
+Run analysis:                 Mac Cmd+Enter   Windows/Linux Ctrl+Enter
 
-• Open a file from the File Explorer
-• Or create a new file to begin analysis
-• AI insights will appear in the right panel
+TRY THIS (Solidity)
+Create: contracts/Hello.sol
+Paste:
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
-════════════════════════════════════════════════════════════
+contract Hello {
+  string public message = "Hello, AuditForge!";
+  function setMessage(string calldata next) external { message = next; }
+}
 
-Keyboard Shortcuts
+WHAT TO LOOK FOR
+- Access control assumptions
+- Input validation and edge cases
+- Gas and style improvements
 
-⌘P        Open file
-⌘N        Create new file
-⌘S        Save active file
-⌘Enter    Run AI analysis
+SUPPORTED FILES
+- Solidity: .sol
+- JavaScript/TypeScript: .js, .ts, .tsx
+- Config and text: .json, .yml, .yaml, .toml, .txt
 
-════════════════════════════════════════════════════════════
-
-Supported Files
-
-• Solidity (.sol)
-• JavaScript / TypeScript
-• Configuration & text files
-
-════════════════════════════════════════════════════════════
-
-Tips
-
-• This editor is optimized for long sessions
-• Dark theme is recommended
-• Use the command palette for faster workflows
-
-════════════════════════════════════════════════════════════
+EDITOR SETTINGS
+Settings > Editor lets you change font, size, line height, ligatures, word wrap, and minimap.
 
 `;

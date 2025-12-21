@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { usePgUiToggle, type UiToggleKey } from '@features/playground/store';
 
 /**
@@ -7,17 +7,16 @@ import { usePgUiToggle, type UiToggleKey } from '@features/playground/store';
  * @returns object with isEnabled and toggle function
  */
 export function useUiToggle(id: UiToggleKey, defaultEnabled = false) {
-    const toggle = usePgUiToggle(state => state.toggle);
+    const toggleInStore = usePgUiToggle(state => state.toggle);
     const isEnabled = usePgUiToggle(state => state.isEnabled(id));
 
     useEffect(() => {
         if (usePgUiToggle.getState().toggleStateById[id] === undefined) {
-            toggle(id, defaultEnabled);
+            toggleInStore(id, defaultEnabled);
         }
-    }, [defaultEnabled]);
+    }, [defaultEnabled, id, toggleInStore]);
 
-    return {
-        isEnabled,
-        toggle: (enabled?: boolean) => toggle(id, enabled),
-    };
+    const toggle = useCallback((enabled?: boolean) => toggleInStore(id, enabled), [id, toggleInStore]);
+
+    return useMemo(() => ({ isEnabled, toggle }), [isEnabled, toggle]);
 }

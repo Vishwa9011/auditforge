@@ -74,7 +74,7 @@ export function EditorTabs() {
     }, [openFiles, fsTree]);
 
     return (
-        <div className="flex h-10 items-stretch overflow-hidden border-b">
+        <div className="flex h-8 items-stretch overflow-hidden border-b md:h-10">
             <div className="h-full min-w-0 flex-1">
                 <div
                     role="tablist"

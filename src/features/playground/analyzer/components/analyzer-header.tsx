@@ -26,13 +26,9 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
     const icon = isAnalyzing ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />;
     const allowedThinkingLevels = getAllowedThinkingLevels(provider, modelId);
     const suggestions = getModelSuggestions(provider);
-    const hasCurrentModel = modelId.trim() && suggestions.some(m => m.id === modelId.trim());
-    const models =
-        hasCurrentModel || !modelId.trim()
-            ? suggestions
-            : [{ id: modelId.trim(), label: `Custom: ${modelId.trim()}`, provider }, ...suggestions];
+
     return (
-        <div className="flex flex-col gap-2 border-b px-2 py-2 sm:h-10 sm:flex-row sm:items-center sm:justify-between sm:py-0">
+        <div className="flex h-8 flex-col gap-2 border-b px-2 py-2 sm:flex-row sm:items-center sm:justify-between sm:py-0 md:h-10">
             <div className="flex items-center gap-2 text-sm font-medium">
                 <Bot className="size-5 text-purple-500" />
                 <p>Analysis Results</p>
@@ -61,7 +57,7 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
                     icon={<Shapes className="size-4" />}
                 >
                     <PopoverTitle>Select model</PopoverTitle>
-                    {models.map(m => (
+                    {suggestions.map(m => (
                         <PopoverItem key={m.id} selected={m.id === modelId} onSelect={() => setModel(m.id)}>
                             {m.label}
                         </PopoverItem>
