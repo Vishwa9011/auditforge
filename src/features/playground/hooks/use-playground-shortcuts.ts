@@ -8,7 +8,7 @@ import { saveActiveFile, saveAllUnsavedFiles } from '../lib';
 export function usePlaygroundShortcuts() {
     const { toggle: toggleOpenFile } = useUiToggle('open-file-command-dialog');
     const { toggle: toggleFileExplorer } = useUiToggle('file-explorer-panel');
-    const { toggle: toggleAiAnalysis } = useUiToggle('ai-analysis-panel');
+    const { toggle: toggleAiAnalysis } = useUiToggle('analyzer-panel');
 
     const actions = useMemo(
         () => ({

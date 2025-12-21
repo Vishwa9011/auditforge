@@ -3,6 +3,8 @@ import { navLinks } from '@/constants';
 import { Settings } from 'lucide-react';
 import { useUiToggle } from '@features/playground/hooks';
 import { Link, useRouterState } from '@tanstack/react-router';
+import { ShortcutTooltip } from '@/components/ui/shortcut-tooltip';
+import { APP_SHORTCUT_IDS } from '@/lib/app-shortcuts';
 
 export default function ActivityBar() {
     const location = useRouterState().location;
@@ -22,43 +24,57 @@ export default function ActivityBar() {
                 <ul className="flex w-full flex-col items-center gap-1">
                     {navLinks.map(item => (
                         <li key={item.id} className="w-full">
-                            <Link
-                                onClick={() => item.id === 'file-explorer' && handleFileExplorerClick()}
-                                to={item.url}
-                                activeOptions={{ exact: item.url === '/' }}
-                                activeProps={() => ({ 'data-active': 'true' })}
-                                inactiveProps={() => ({ 'data-active': 'false' })}
-                                aria-label={item.title}
-                                title={item.title}
-                                className={cn(
-                                    'text-muted-foreground relative mx-auto flex h-10 w-10 items-center justify-center rounded-md transition-colors',
-                                    'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                                    'focus-visible:ring-ring focus-visible:ring-offset-sidebar focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-                                    'before:bg-sidebar-primary before:absolute before:top-1/2 before:left-0 before:h-5 before:w-0.5 before:-translate-y-1/2 before:rounded-full before:opacity-0 before:transition-opacity',
-                                    'data-[active=true]:bg-sidebar-accent/80 data-[active=true]:text-sidebar-accent-foreground data-[active=true]:before:opacity-100',
-                                )}
+                            <ShortcutTooltip
+                                label={item.title}
+                                shortcutId={
+                                    item.id === 'file-explorer' ? APP_SHORTCUT_IDS.OPEN_FILE_EXPLORER : undefined
+                                }
+                                side="right"
+                                sideOffset={8}
                             >
-                                <item.icon className="size-5" />
-                            </Link>
+                                <Link
+                                    onClick={() => item.id === 'file-explorer' && handleFileExplorerClick()}
+                                    to={item.url}
+                                    activeOptions={{ exact: item.url === '/' }}
+                                    activeProps={() => ({ 'data-active': 'true' })}
+                                    inactiveProps={() => ({ 'data-active': 'false' })}
+                                    aria-label={item.title}
+                                    className={cn(
+                                        'text-muted-foreground relative mx-auto flex h-10 w-10 items-center justify-center rounded-md transition-colors',
+                                        'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                                        'focus-visible:ring-ring focus-visible:ring-offset-sidebar focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                                        'before:bg-sidebar-primary before:absolute before:top-1/2 before:left-0 before:h-5 before:w-0.5 before:-translate-y-1/2 before:rounded-full before:opacity-0 before:transition-opacity',
+                                        'data-[active=true]:bg-sidebar-accent/80 data-[active=true]:text-sidebar-accent-foreground data-[active=true]:before:opacity-100',
+                                    )}
+                                >
+                                    <item.icon className="size-5" />
+                                </Link>
+                            </ShortcutTooltip>
                         </li>
                     ))}
                 </ul>
 
                 <div className="mt-auto mb-2">
-                    <Link
-                        to="/settings"
-                        aria-label="Settings"
-                        title="Settings"
-                        className={cn(
-                            'text-muted-foreground relative mx-auto flex h-10 w-10 items-center justify-center rounded-md transition-colors',
-                            'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                            'focus-visible:ring-ring focus-visible:ring-offset-sidebar focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-                            'before:bg-sidebar-primary before:absolute before:top-1/2 before:left-0 before:h-5 before:w-0.5 before:-translate-y-1/2 before:rounded-full before:opacity-0 before:transition-opacity',
-                            'data-[active=true]:bg-sidebar-accent/80 data-[active=true]:text-sidebar-accent-foreground data-[active=true]:before:opacity-100',
-                        )}
+                    <ShortcutTooltip
+                        label="Settings"
+                        shortcutId={APP_SHORTCUT_IDS.OPEN_SETTINGS}
+                        side="right"
+                        sideOffset={8}
                     >
-                        <Settings className="size-5" />
-                    </Link>
+                        <Link
+                            to="/settings"
+                            aria-label="Settings"
+                            className={cn(
+                                'text-muted-foreground relative mx-auto flex h-10 w-10 items-center justify-center rounded-md transition-colors',
+                                'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                                'focus-visible:ring-ring focus-visible:ring-offset-sidebar focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                                'before:bg-sidebar-primary before:absolute before:top-1/2 before:left-0 before:h-5 before:w-0.5 before:-translate-y-1/2 before:rounded-full before:opacity-0 before:transition-opacity',
+                                'data-[active=true]:bg-sidebar-accent/80 data-[active=true]:text-sidebar-accent-foreground data-[active=true]:before:opacity-100',
+                            )}
+                        >
+                            <Settings className="size-5" />
+                        </Link>
+                    </ShortcutTooltip>
                 </div>
             </nav>
         </aside>
