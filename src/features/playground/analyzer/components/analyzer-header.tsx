@@ -163,7 +163,6 @@ function HeaderPopover({
                             )}
                         >
                             {icon}
-                            <span className="max-w-36 min-w-0 truncate text-left sm:max-w-48">{valueLabel}</span>
                             <ChevronDown className="size-3.5 opacity-70" />
                         </button>
                     </PopoverTrigger>
