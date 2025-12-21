@@ -32,13 +32,13 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
             ? suggestions
             : [{ id: modelId.trim(), label: `Custom: ${modelId.trim()}`, provider }, ...suggestions];
     return (
-        <div className="flex h-10 items-center justify-between gap-4 border-b px-2">
+        <div className="flex flex-col gap-2 border-b px-2 py-2 sm:h-10 sm:flex-row sm:items-center sm:justify-between sm:py-0">
             <div className="flex items-center gap-2 text-sm font-medium">
                 <Bot className="size-5 text-purple-500" />
                 <p>Analysis Results</p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:flex-nowrap sm:justify-end">
                 <HeaderPopover
                     disabled={isAnalyzing}
                     ariaLabel="Select provider"

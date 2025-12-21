@@ -24,7 +24,7 @@ export function AnalysisReport({ data }: { data: AnalyzeResponse }) {
     const issuesFound = data.overview.issuesFound ?? data.issues.length;
 
     return (
-        <div className="space-y-4 p-4">
+        <div className="mx-auto w-full max-w-5xl space-y-4 px-3 py-4 sm:px-4 sm:py-5 lg:px-6">
             <Card>
                 <CardHeader className="pb-3">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -44,7 +44,7 @@ export function AnalysisReport({ data }: { data: AnalyzeResponse }) {
                                         View JSON
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-3xl">
+                                <DialogContent className="w-[calc(100vw-2rem)] max-w-3xl sm:w-full">
                                     <DialogHeader>
                                         <DialogTitle>Raw JSON</DialogTitle>
                                         <DialogDescription>Useful for exporting or debugging.</DialogDescription>
@@ -55,7 +55,7 @@ export function AnalysisReport({ data }: { data: AnalyzeResponse }) {
                                             Copy
                                         </Button>
                                     </div>
-                                    <pre className="bg-muted max-h-[60vh] overflow-auto rounded-md p-3 text-xs">
+                                    <pre className="bg-muted max-h-[60vh] overflow-auto rounded-md p-3 text-[11px] sm:text-xs">
                                         {json}
                                     </pre>
                                 </DialogContent>
@@ -74,7 +74,7 @@ export function AnalysisReport({ data }: { data: AnalyzeResponse }) {
                     <div className="grid gap-3 sm:grid-cols-2">
                         <div className="space-y-2">
                             <p className="text-xs font-medium">By Severity</p>
-                            <div className="grid grid-cols-2 gap-2 text-sm">
+                            <div className="grid grid-cols-1 gap-2 text-sm min-[420px]:grid-cols-2">
                                 <Metric label="Critical" value={data.overview.issuesBySeverity.critical} />
                                 <Metric label="High" value={data.overview.issuesBySeverity.high} />
                                 <Metric label="Medium" value={data.overview.issuesBySeverity.medium} />
@@ -83,7 +83,7 @@ export function AnalysisReport({ data }: { data: AnalyzeResponse }) {
                         </div>
                         <div className="space-y-2">
                             <p className="text-xs font-medium">By Category</p>
-                            <div className="grid grid-cols-2 gap-2 text-sm">
+                            <div className="grid grid-cols-1 gap-2 text-sm min-[420px]:grid-cols-2">
                                 <Metric label="Security" value={data.overview.issuesByCategory.security} />
                                 <Metric label="Logic" value={data.overview.issuesByCategory.logic} />
                                 <Metric label="Gas" value={data.overview.issuesByCategory.gas} />

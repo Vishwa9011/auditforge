@@ -23,7 +23,7 @@ export function AnalyzerLoadingState({
     footer?: ReactNode;
 }) {
     return (
-        <div className="p-4">
+        <div className="mx-auto w-full max-w-5xl px-3 py-4 sm:px-4 sm:py-5 lg:px-6">
             <Card>
                 <CardHeader className="pb-3">
                     <CardTitle className="flex items-center gap-2">
@@ -70,7 +70,7 @@ function LoadingSteps() {
 
 export function AnalyzerEmptyState() {
     return (
-        <div className="p-4">
+        <div className="mx-auto w-full max-w-5xl px-3 py-4 sm:px-4 sm:py-5 lg:px-6">
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -94,7 +94,7 @@ export function AnalyzerEmptyState() {
 export function AnalyzerErrorState({ error }: { error: unknown }) {
     const message = normalizeError(error);
     return (
-        <div className="p-4">
+        <div className="mx-auto w-full max-w-5xl px-3 py-4 sm:px-4 sm:py-5 lg:px-6">
             <Card className="border-destructive/40">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">

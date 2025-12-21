@@ -43,11 +43,11 @@ export function IssueList({ issues }: { issues: Issue[] }) {
 
     return (
         <div className="space-y-3">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-sm font-medium">Issues ({filtered.length})</div>
+            <div className="scroll-thin flex w-full flex-col gap-2 overflow-x-auto pb-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-sm font-medium whitespace-nowrap">Issues ({filtered.length})</div>
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <div className="relative w-full sm:w-72">
+                    <div className="relative w-full sm:w-40 lg:w-40">
                         <Search className="text-muted-foreground absolute top-2 left-2 size-4" />
                         <Input
                             value={query}
@@ -57,11 +57,11 @@ export function IssueList({ issues }: { issues: Issue[] }) {
                         />
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <Filter className="text-muted-foreground size-4" />
+                    <div className="grid w-full grid-cols-1 gap-2 min-[480px]:grid-cols-2 sm:flex sm:w-auto sm:items-center sm:gap-2">
+                        <Filter className="text-muted-foreground hidden size-4 sm:block" />
 
                         <Select value={severity} onValueChange={v => setSeverity(v as Severity)}>
-                            <SelectTrigger size="sm" className="h-8 w-36">
+                            <SelectTrigger size="sm" className="h-8 w-full sm:w-36">
                                 <SelectValue placeholder="Severity" />
                             </SelectTrigger>
                             <SelectContent>
@@ -74,7 +74,7 @@ export function IssueList({ issues }: { issues: Issue[] }) {
                         </Select>
 
                         <Select value={category} onValueChange={v => setCategory(v as Category)}>
-                            <SelectTrigger size="sm" className="h-8 w-36">
+                            <SelectTrigger size="sm" className="h-8 w-full sm:w-36">
                                 <SelectValue placeholder="Category" />
                             </SelectTrigger>
                             <SelectContent>
@@ -121,7 +121,7 @@ function IssueRow({ issue }: { issue: Issue }) {
                             variant="ghost"
                             className="group h-auto w-full justify-start rounded-lg px-3 py-3 text-left"
                         >
-                            <div className="flex w-full items-start justify-between gap-3">
+                            <div className="flex w-full flex-col items-start justify-between gap-2 min-[480px]:flex-row min-[480px]:gap-3">
                                 <div className="flex min-w-0 items-start gap-2">
                                     <ChevronRight className="text-muted-foreground mt-0.5 size-4 shrink-0 group-data-[state=open]:hidden" />
                                     <ChevronDown className="text-muted-foreground mt-0.5 hidden size-4 shrink-0 group-data-[state=open]:block" />
@@ -131,10 +131,10 @@ function IssueRow({ issue }: { issue: Issue }) {
                                             <CategoryBadge category={issue.category} />
                                             {loc ? <span className="text-muted-foreground text-xs">{loc}</span> : null}
                                         </div>
-                                        <p className="mt-1 truncate text-sm font-medium">{issue.title}</p>
+                                        <p className="mt-1 line-clamp-2 text-sm font-medium">{issue.title}</p>
                                     </div>
                                 </div>
-                                <span className="text-muted-foreground shrink-0 text-xs">
+                                <span className="text-muted-foreground shrink-0 text-xs min-[480px]:mt-0.5">
                                     {issue.severity.toUpperCase()}
                                 </span>
                             </div>
