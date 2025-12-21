@@ -1,5 +1,4 @@
-export const WELCOME_FILE_CONTENT = `
-AUDITFORGE
+export const WELCOME_FILE_CONTENT = `AUDITFORGE
 AI-assisted analysis for smart contracts and source code
 
 START HERE

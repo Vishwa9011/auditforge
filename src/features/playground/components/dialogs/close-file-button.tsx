@@ -25,6 +25,7 @@ export function CloseFileButton({ ino, path, name }: CloseFileButtonProps) {
     const hasUnsavedChanges = useFileEditorStore(state => state.unsavedInos.has(ino));
 
     const clearUnsaved = useFileEditorStore(state => state.clearUnsaved);
+    const removeDraft = useFileEditorStore(state => state.removeDraft);
     const displayName = useMemo(() => name ?? resolveFilename(path) ?? 'this file', [name, path]);
 
     const requestClose = () => {
@@ -42,6 +43,8 @@ export function CloseFileButton({ ino, path, name }: CloseFileButtonProps) {
         setIsSaving(true);
         try {
             await saveFileByIno(ino);
+            // to ensure state is updated before closing
+            removeDraft(ino);
             closeFile(path);
             setIsAlertOpen(false);
         } finally {
@@ -54,6 +57,7 @@ export function CloseFileButton({ ino, path, name }: CloseFileButtonProps) {
         event.stopPropagation();
 
         clearUnsaved(ino);
+        removeDraft(ino);
         closeFile(path);
         setIsAlertOpen(false);
     };

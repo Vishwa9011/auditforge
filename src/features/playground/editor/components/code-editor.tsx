@@ -16,22 +16,15 @@ type CodeEditorProps = {
 };
 
 export function CodeEditor({ path, content, meta, extension }: CodeEditorProps) {
-    const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-    const monacoRef = useRef<Monaco | null>(null);
     const { resolvedTheme } = useTheme();
-    const { fontFamily, fontSize, lineHeight, fontLigatures, lineNumbers, wordWrap, minimap } = useEditorSettings();
-    const modelPath = useMemo(() => {
-        // Monaco's TS/JS worker decides "script kind" from the model URI (e.g. *.ts vs *.js).
-        // Ensure the model has a filename-like URI so TS syntax (e.g. `type`) is accepted.
-        const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-        return `file://${normalizedPath}`;
-    }, [path]);
-
+    const monacoRef = useRef<Monaco | null>(null);
     const unsavedInos = useFileEditorStore(state => state.unsavedInos);
     const markUnsaved = useFileEditorStore(state => state.markUnsaved);
     const draftsByIno = useFileEditorStore(state => state.draftsByIno);
+    const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
     const upsertDraftContent = useFileEditorStore(state => state.upsertDraftContent);
-    const debouncedUpsertDraftContent = useDebouncedCallback(upsertDraftContent, 100);
+    const debouncedUpsertDraftContent = useDebouncedCallback(upsertDraftContent, 10);
+    const { fontFamily, fontSize, lineHeight, fontLigatures, lineNumbers, wordWrap, minimap } = useEditorSettings();
 
     function handleEditorChange(value?: string) {
         if (meta && value !== undefined) {
@@ -109,6 +102,11 @@ export function CodeEditor({ path, content, meta, extension }: CodeEditorProps) 
         }
     }
 
+    const modelPath = useMemo(() => {
+        const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+        return `file://${normalizedPath}`;
+    }, [path]);
+
     useEffect(() => {
         updateEditorLanguage();
     }, [path, extension]);
@@ -137,7 +135,6 @@ export function CodeEditor({ path, content, meta, extension }: CodeEditorProps) 
         <div className="border-border h-full w-full border-2" style={{ fontFamily: getFontFamilyCssVar(fontFamily) }}>
             <Editor
                 height="100%"
-                theme="vs-dark"
                 path={modelPath}
                 value={draftContent ?? ''}
                 onChange={handleEditorChange}

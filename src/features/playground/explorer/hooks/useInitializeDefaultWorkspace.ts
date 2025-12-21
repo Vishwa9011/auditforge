@@ -7,7 +7,6 @@ import { DEFAULT_CWD, DEFAULT_WORKSPACE, resolvePath, WELCOME_FILE_CONTENT } fro
  * Initializes the default workspace if it doesn't exist.
  * Waits for persisted state hydration to avoid clobbering user data.
  */
-
 export function useInitializeDefaultWorkspace() {
     const isWorkspaceInitialized = useFileSystem(state => state.isWorkspaceInitialized);
     const [hasHydrated, setHasHydrated] = useState(() => useFileSystem.persist.hasHydrated());
@@ -29,11 +28,8 @@ export function useInitializeDefaultWorkspace() {
         (async () => {
             try {
                 const before = resolvePath(DEFAULT_CWD, useFileSystem.getState().fsTree);
-                if (before.kind === 'missing') {
-                    const { createDir, openFile, selectWorkspace } = useFileSystem.getState();
-
-                    createDir('/', '.workspaces');
-                    createDir('/.workspaces', DEFAULT_WORKSPACE);
+                if (before.kind === 'found') {
+                    const { openFile, selectWorkspace } = useFileSystem.getState();
 
                     const afterDirs = useFileSystem.getState().fsTree;
                     const welcomeResult = resolvePath(welcomePath, afterDirs);

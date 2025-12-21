@@ -11,7 +11,7 @@ import { Toaster } from './components/ui/sonner';
 
 // Create a new router instance
 const router = createRouter({ routeTree });
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {

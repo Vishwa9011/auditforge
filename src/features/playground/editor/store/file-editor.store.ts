@@ -19,6 +19,9 @@ type FileEditorStoreState = {
     >;
     unsavedInos: Set<Ino>;
     upsertDraftContent: (ino: Ino, content: string, path: string) => void;
+
+    // when a file is going to close it, remove its draft
+    removeDraft: (ino: Ino) => void;
     markUnsaved: (ino: Ino) => void;
     clearUnsaved: (ino: Ino) => void;
     clearAllUnsaved: () => void;
@@ -35,11 +38,9 @@ export const useFileEditorStore = create<FileEditorStoreState>()(
                 state.unsavedInos.add(ino);
             });
         },
-
         clearUnsaved: (ino: Ino) => {
             set(state => {
                 state.unsavedInos.delete(ino);
-                state.draftsByIno.delete(ino);
             });
         },
         clearAllUnsaved: () => {
@@ -65,6 +66,12 @@ export const useFileEditorStore = create<FileEditorStoreState>()(
                         size: new TextEncoder().encode(content).length,
                     });
                 }
+            });
+        },
+
+        removeDraft: (ino: Ino) => {
+            set(state => {
+                state.draftsByIno.delete(ino);
             });
         },
         setCurrentFileContent: (content: string | null) => {

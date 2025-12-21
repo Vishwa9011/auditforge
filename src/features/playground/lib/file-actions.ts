@@ -1,7 +1,8 @@
+import { queryClient } from '@/main';
 import type { Ino } from '@features/playground/types';
 import { writeFileContent } from '@features/playground/lib/fs-db';
-import { useFileEditorStore, useFileSystem, usePgUiToggle } from '@features/playground/store';
 import { resolvePath, splitPath } from '@features/playground/store/file-system';
+import { useFileEditorStore, useFileSystem, usePgUiToggle } from '@features/playground/store';
 
 export async function saveFileByIno(ino: Ino) {
     const { draftsByIno, clearUnsaved } = useFileEditorStore.getState();
@@ -9,6 +10,7 @@ export async function saveFileByIno(ino: Ino) {
     if (!draft) return false;
 
     await updateFileContentAndSize(draft.path, ino, draft.content);
+
     clearUnsaved(ino);
     return true;
 }
@@ -21,6 +23,9 @@ export async function saveActiveFile() {
     if (res.kind == 'missing') return;
 
     await saveFileByIno(res.meta.ino);
+    await queryClient.invalidateQueries({
+        queryKey: [activeFile],
+    });
 }
 
 export async function saveAllUnsavedFiles() {
@@ -47,18 +52,21 @@ export function confirmCloseFileIfUnsavedChanges(ino: Ino) {
     const hasUnsavedChanges = useFileEditorStore.getState().unsavedInos.has(ino);
     if (!hasUnsavedChanges) return false;
     usePgUiToggle.getState().toggle(`close-file-dialog-${ino}`, true);
+
     return true;
 }
 
 export function closeAllFilesOrConfirmUnsavedChanges() {
     if (confirmCloseAllFilesIfUnsavedChanges()) return true;
     useFileSystem.getState().closeAllFiles();
+    useFileEditorStore.getState().clearAllUnsaved(); // Clear all unsaved states (important)
     return false;
 }
 
 export function closeFileOrConfirmUnsavedChanges(path: string, ino: Ino) {
     if (confirmCloseFileIfUnsavedChanges(ino)) return true;
     useFileSystem.getState().closeFile(path);
+    useFileEditorStore.getState().clearUnsaved(ino); // Clear unsaved state for this file (important)
     return false;
 }
 
