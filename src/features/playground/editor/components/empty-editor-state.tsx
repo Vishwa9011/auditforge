@@ -1,5 +1,5 @@
 import { Kbd } from '@/components/ui/kbd';
-import { APP_SHORTCUTS, EMPTY_STATE_SHORTCUT_IDS, type AppShortcut } from '@/lib/app-shortcuts';
+import { APP_SHORTCUTS, EMPTY_STATE_SHORTCUT_IDS, getShortcutDisplayKeys, type AppShortcut } from '@/lib/app-shortcuts';
 import { usePlatform } from '@/hooks/use-platform';
 
 function KeyCombo({ keys }: { keys: readonly string[] }) {
@@ -7,7 +7,6 @@ function KeyCombo({ keys }: { keys: readonly string[] }) {
         <span className="inline-flex items-center gap-2">
             {keys.map((key, index) => (
                 <span key={`${key}-${index}`} className="inline-flex items-center">
-                    {/* {index > 0 && <span className="text-muted-foreground/60 px-1 text-[10px]">+</span>} */}
                     <Kbd className={key === '⌘' ? 'text-[13px]' : undefined}>{key}</Kbd>
                 </span>
             ))}
@@ -15,8 +14,7 @@ function KeyCombo({ keys }: { keys: readonly string[] }) {
     );
 }
 
-function ShortcutRow({ item, keymap }: { item: AppShortcut; keymap: 'mac' | 'windows' }) {
-    const keys = keymap === 'mac' ? item.macKeys : item.windowsKeys;
+function ShortcutRow({ item, keys }: { item: AppShortcut; keys: readonly string[] }) {
     return (
         <div className="flex items-center justify-between gap-6">
             <span className="text-muted-foreground text-xs">{item.label}</span>
@@ -41,7 +39,11 @@ export function EmptyEditorState() {
 
                 <div className="pointer-events-none mt-2 space-y-2">
                     {shortcuts.map(shortcut => (
-                        <ShortcutRow key={shortcut.id} item={shortcut} keymap={keymap} />
+                        <ShortcutRow
+                            key={shortcut.id}
+                            item={shortcut}
+                            keys={getShortcutDisplayKeys(shortcut.keys, keymap)}
+                        />
                     ))}
                 </div>
             </div>

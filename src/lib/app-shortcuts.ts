@@ -1,7 +1,8 @@
+export const MODIFIER_KEYS = ['Ctrl', 'Shift', 'Alt'] as const;
+
 export const SHORTCUT_COMBINATION_KEYS = [
-    'Ctrl',
-    'Shift',
-    'Alt',
+    ...MODIFIER_KEYS,
+    'Enter',
     'P',
     'N',
     'B',
@@ -18,45 +19,90 @@ export const SHORTCUT_COMBINATION_KEYS = [
     'Q',
     'D',
     ',',
-    'Enter',
 ] as const;
-export const OPERATIONAL_KEYS = ['Ctrl', 'Shift', 'Alt'] as const;
 
 export type ShortcutKey = (typeof SHORTCUT_COMBINATION_KEYS)[number];
-export type OperationalKey = (typeof OPERATIONAL_KEYS)[number];
+export type ModifierKey = (typeof MODIFIER_KEYS)[number];
 
-export type AppShortcut = {
-    id: string;
+export const APP_SHORTCUT_IDS = {
+    OPEN_FILE: 'open-file',
+    NEW_FILE: 'new-file',
+    OPEN_FILE_EXPLORER: 'open-file-explorer',
+    OPEN_AI_ANALYSIS: 'open-ai-analysis',
+    OPEN_SETTINGS: 'open-settings',
+    CLOSE_FILE: 'close-file',
+    CLOSE_ALL_FILES: 'close-all-files',
+    SAVE_FILE: 'save-file',
+    SAVE_ALL_FILES: 'save-all-file',
+} as const;
+
+export type AppShortcutId = (typeof APP_SHORTCUT_IDS)[keyof typeof APP_SHORTCUT_IDS];
+
+export type AppShortcutDefinition = {
     label: string;
-    macKeys: readonly string[];
-    windowsKeys: readonly ShortcutKey[];
+    keys: readonly ShortcutKey[];
 };
 
-export const APP_SHORTCUTS = [
-    {
-        id: 'open-file',
-        label: 'Open file',
-        macKeys: ['⌘', 'P'],
-        windowsKeys: ['Ctrl', 'P'],
-    },
-    { id: 'new-file', label: 'Create new file', macKeys: ['⌘', 'N'], windowsKeys: ['Ctrl', 'N'] },
-    {
-        id: 'open-file-explorer',
-        label: 'Open file explorer',
-        macKeys: ['⌘', 'B'],
-        windowsKeys: ['Ctrl', 'B'],
-    },
-    {
-        id: 'open-ai-analysis',
-        label: 'Open analyzer panel',
-        macKeys: ['⌘', 'Enter'],
-        windowsKeys: ['Ctrl', 'Enter'],
-    },
-    { id: 'open-settings', label: 'Open settings', macKeys: ['⌘', ','], windowsKeys: ['Ctrl', ','] },
-    { id: 'close-file', label: 'Close file', macKeys: ['⌘', 'D'], windowsKeys: ['Ctrl', 'D'] },
-    { id: 'save-file', label: 'Save file', macKeys: ['⌘', 'S'], windowsKeys: ['Ctrl', 'S'] },
-] satisfies readonly AppShortcut[];
+export type AppShortcut = {
+    id: AppShortcutId;
+} & AppShortcutDefinition;
 
-export const EMPTY_STATE_SHORTCUT_IDS = ['open-file', 'new-file', 'open-file-explorer'] satisfies ReadonlyArray<
-    AppShortcut['id']
->;
+// Define all application shortcuts here
+export const APP_SHORTCUTS_BY_ID = {
+    [APP_SHORTCUT_IDS.OPEN_FILE]: {
+        label: 'Open file',
+        keys: ['Ctrl', 'P'],
+    },
+    [APP_SHORTCUT_IDS.NEW_FILE]: {
+        label: 'Create new file',
+        keys: ['Ctrl', 'N'],
+    },
+    [APP_SHORTCUT_IDS.OPEN_FILE_EXPLORER]: {
+        label: 'Open file explorer',
+        keys: ['Ctrl', 'B'],
+    },
+    [APP_SHORTCUT_IDS.OPEN_AI_ANALYSIS]: {
+        label: 'Open analyzer panel',
+        keys: ['Ctrl', 'Enter'],
+    },
+    [APP_SHORTCUT_IDS.OPEN_SETTINGS]: {
+        label: 'Open settings',
+        keys: ['Ctrl', ','],
+    },
+    [APP_SHORTCUT_IDS.CLOSE_FILE]: {
+        label: 'Close file',
+        keys: ['Ctrl', 'D'],
+    },
+    [APP_SHORTCUT_IDS.CLOSE_ALL_FILES]: {
+        label: 'Close All files',
+        keys: ['Ctrl', 'Shift', 'D'],
+    },
+    [APP_SHORTCUT_IDS.SAVE_FILE]: {
+        label: 'Save file',
+        keys: ['Ctrl', 'S'],
+    },
+    [APP_SHORTCUT_IDS.SAVE_ALL_FILES]: {
+        label: 'Save All file',
+        keys: ['Ctrl', 'Shift', 'S'],
+    },
+} as const satisfies Record<AppShortcutId, AppShortcutDefinition>;
+
+export const APP_SHORTCUTS: readonly AppShortcut[] = (
+    Object.entries(APP_SHORTCUTS_BY_ID) as Array<[AppShortcutId, AppShortcutDefinition]>
+).map(([id, shortcut]) => ({
+    id,
+    ...shortcut,
+}));
+
+export const EMPTY_STATE_SHORTCUT_IDS: readonly AppShortcutId[] = [
+    APP_SHORTCUT_IDS.OPEN_FILE,
+    APP_SHORTCUT_IDS.NEW_FILE,
+    APP_SHORTCUT_IDS.OPEN_FILE_EXPLORER,
+];
+
+export type ShortcutKeymap = 'mac' | 'windows';
+
+export function getShortcutDisplayKeys(keys: readonly ShortcutKey[], keymap: ShortcutKeymap): readonly string[] {
+    if (keymap !== 'mac') return [...keys];
+    return keys.map(key => (key === 'Ctrl' ? '⌘' : key));
+}

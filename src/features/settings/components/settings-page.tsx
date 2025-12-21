@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
 import { Cog, Download, ExternalLink, RotateCcw, Upload } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { APP_SHORTCUTS } from '@/lib/app-shortcuts';
+import { APP_SHORTCUTS, getShortcutDisplayKeys } from '@/lib/app-shortcuts';
 import { Kbd } from '@/components/ui/kbd';
 import { usePlatform } from '@/hooks/use-platform';
 import {
@@ -280,7 +280,7 @@ function ShortcutsSettingsSection() {
                                 className="flex items-center justify-between gap-6 rounded-lg border p-3"
                             >
                                 <div className="min-w-0 text-sm font-medium">{shortcut.label}</div>
-                                <KeyCombo keys={keymap === 'mac' ? shortcut.macKeys : shortcut.windowsKeys} />
+                                <KeyCombo keys={getShortcutDisplayKeys(shortcut.keys, keymap)} />
                             </div>
                         ))}
                     </div>
