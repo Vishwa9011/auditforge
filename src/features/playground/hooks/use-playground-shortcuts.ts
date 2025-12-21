@@ -14,7 +14,6 @@ export function usePlaygroundShortcuts() {
 
     const actions = useMemo(
         () => ({
-            [APP_SHORTCUT_IDS.NEW_FILE]: () => useFileSystem.getState(),
             [APP_SHORTCUT_IDS.OPEN_FILE]: () => toggleOpenFile(true),
             [APP_SHORTCUT_IDS.OPEN_FILE_EXPLORER]: () => toggleFileExplorer(),
             [APP_SHORTCUT_IDS.OPEN_AI_ANALYSIS]: () => toggleAiAnalysis(),

@@ -7,7 +7,6 @@ export type ModifierKey = (typeof MODIFIER_KEYS)[number];
 
 export const APP_SHORTCUT_IDS = {
     OPEN_FILE: 'open-file',
-    NEW_FILE: 'new-file',
     OPEN_FILE_EXPLORER: 'open-file-explorer',
     OPEN_AI_ANALYSIS: 'open-ai-analysis',
     OPEN_SETTINGS: 'open-settings',
@@ -33,11 +32,6 @@ export const APP_SHORTCUTS_BY_ID = {
     [APP_SHORTCUT_IDS.OPEN_FILE]: {
         label: 'Open file',
         keys: ['Ctrl', 'O'], // standard, safe
-    },
-
-    [APP_SHORTCUT_IDS.NEW_FILE]: {
-        label: 'Create new file',
-        keys: ['Ctrl', 'Shift', 'O'], // avoids Ctrl+N / Incognito
     },
 
     [APP_SHORTCUT_IDS.OPEN_FILE_EXPLORER]: {
@@ -84,7 +78,7 @@ export const APP_SHORTCUTS: readonly AppShortcut[] = (
 
 export const EMPTY_STATE_SHORTCUT_IDS: readonly AppShortcutId[] = [
     APP_SHORTCUT_IDS.OPEN_FILE,
-    APP_SHORTCUT_IDS.NEW_FILE,
+    APP_SHORTCUT_IDS.OPEN_SETTINGS,
     APP_SHORTCUT_IDS.OPEN_FILE_EXPLORER,
 ];
 
