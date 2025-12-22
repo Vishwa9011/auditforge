@@ -31,9 +31,6 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
     const allowedThinkingLevels = useMemo(() => getAllowedThinkingLevels(provider, modelId), [provider, modelId]);
     const suggestions = useMemo(() => getModelSuggestions(provider), [provider]);
 
-    const providerLabel = PROVIDER_OPTIONS.find(p => p.id === provider)?.label ?? provider;
-    const modelLabel =
-        suggestions.find(m => m.id === modelId)?.label ?? (modelId.trim() ? modelId.trim() : 'Select model');
     const analyzeIcon = isAnalyzing ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />;
 
     return (
@@ -47,7 +44,6 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
                         ariaLabel="Select provider"
                         tooltip="Select provider"
                         icon={<Cpu className="size-4" />}
-                        valueLabel={providerLabel}
                     >
                         <PopoverTitle>Provider</PopoverTitle>
                         {PROVIDER_OPTIONS.map(p => (
@@ -62,7 +58,6 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
                         ariaLabel="Select model"
                         tooltip="Select model"
                         icon={<Shapes className="size-4" />}
-                        valueLabel={modelLabel}
                     >
                         <PopoverTitle>Model</PopoverTitle>
                         {suggestions.map(m => (
@@ -77,7 +72,6 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
                         ariaLabel="Select thinking level"
                         tooltip="Select thinking level"
                         icon={<Brain className="size-4" />}
-                        valueLabel={thinkingLevel}
                     >
                         <PopoverTitle>Thinking</PopoverTitle>
                         {THINKING_LEVELS.map(level => (
@@ -133,14 +127,12 @@ function HeaderPopover({
     ariaLabel,
     tooltip,
     icon,
-    valueLabel,
     children,
 }: {
     disabled?: boolean;
     ariaLabel: string;
     tooltip: string;
     icon: ReactNode;
-    valueLabel: string;
     children: ReactNode;
 }) {
     const [open, setOpen] = useState(false);

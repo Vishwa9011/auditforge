@@ -26,7 +26,7 @@ export async function analyzeWithOpenAI(input: AnalyzeRequest, config: OpenAIPro
     if (!apiKey) {
         return {
             ok: false,
-            error: 'Missing OpenAI API key (set it in Analyzer settings, VITE_OPENAI_API_KEY, or VITE_OPEN_API_KEY)',
+            error: 'Missing OpenAI API key. Please provide it in the settings.',
         };
     }
 

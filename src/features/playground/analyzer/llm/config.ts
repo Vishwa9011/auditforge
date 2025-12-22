@@ -27,20 +27,20 @@ export const DEFAULT_PROVIDER: LlmProvider = 'ollama';
 export const MODEL_SUGGESTIONS = {
     ollama: [
         {
-            id: 'deepseek-r1:7b',
-            label: 'DeepSeek R1 (7B)',
-            provider: 'ollama',
-            selected: true,
-            recommended: true,
-            allowedThinkingLevels: ['low', 'medium', 'high'],
-            defaultThinkingLevel: 'medium',
-        },
-        {
             id: 'codellama:7b',
             label: 'CodeLlama (7B)',
             provider: 'ollama',
+            selected: true,
+            recommended: true,
             allowedThinkingLevels: ['none', 'low'],
             defaultThinkingLevel: 'low',
+        },
+        {
+            id: 'deepseek-r1:7b',
+            label: 'DeepSeek R1 (7B)',
+            provider: 'ollama',
+            allowedThinkingLevels: ['low', 'medium', 'high'],
+            defaultThinkingLevel: 'medium',
         },
         {
             id: 'llama3.1:8b',
