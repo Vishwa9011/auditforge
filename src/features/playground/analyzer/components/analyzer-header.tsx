@@ -95,7 +95,7 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
                                 asChild
                                 aria-label="Open analyzer settings"
                             >
-                                <Link to="/settings" search={{ tab: 'analyzer' as const }}>
+                                <Link to="/settings" search={{ tab: 'analyzer' as const }} className="h-7">
                                     <Settings2 className="size-4" />
                                 </Link>
                             </Button>
@@ -110,6 +110,7 @@ export function AnalyzerHeader({ onAnalyze, isAnalyzing }: AnalyzerHeaderProps) 
                             <Button
                                 variant="outline"
                                 size="sm"
+                                className="h-7"
                                 onClick={onAnalyze}
                                 disabled={isAnalyzing}
                                 aria-busy={isAnalyzing}
