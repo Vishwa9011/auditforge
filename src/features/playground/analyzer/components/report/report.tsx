@@ -9,19 +9,24 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
-import { Copy, FileText } from 'lucide-react';
+import { Copy, FileText, Check } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { AnalyzeResponse } from '../../types';
 import { SecurityLevelBadge } from './badges';
 import { IssueList } from './issue-list';
-
-function safeCopy(text: string) {
-    void navigator.clipboard?.writeText(text);
-}
+import { useCopyToClipboard } from '@/hooks';
+import { toast } from 'sonner';
 
 export function AnalysisReport({ data }: { data: AnalyzeResponse }) {
+    const { copyToClipboard, isCopied } = useCopyToClipboard();
     const json = JSON.stringify(data, null, 2);
     const issuesFound = data.overview.issuesFound ?? data.issues.length;
+
+    const handleCopyJson = () => {
+        const ok = copyToClipboard(json);
+        if (ok) toast.success('Copied JSON to clipboard');
+        else toast.error('Failed to copy');
+    };
 
     return (
         <div className="mx-auto w-full max-w-5xl space-y-4 px-3 py-4 sm:px-4 sm:py-5 lg:px-6">
@@ -50,9 +55,16 @@ export function AnalysisReport({ data }: { data: AnalyzeResponse }) {
                                         <DialogDescription>Useful for exporting or debugging.</DialogDescription>
                                     </DialogHeader>
                                     <div className="flex justify-end">
-                                        <Button variant="outline" size="sm" onClick={() => safeCopy(json)}>
-                                            <Copy className="size-4" />
-                                            Copy
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="h-8 gap-2"
+                                            onClick={handleCopyJson}
+                                            disabled={isCopied}
+                                            aria-label="Copy report JSON to clipboard"
+                                        >
+                                            {isCopied ? <Check className="size-4" /> : <Copy className="size-4" />}
+                                            {isCopied ? 'Copied' : 'Copy'}
                                         </Button>
                                     </div>
                                     <pre className="bg-muted max-h-[60vh] overflow-auto rounded-md p-3 text-[11px] sm:text-xs">

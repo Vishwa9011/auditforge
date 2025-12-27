@@ -36,6 +36,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
+        "copy-to-clipboard": "^3.3.3",
         "idb": "^8.0.3",
         "immer": "^11.0.1",
         "lucide-react": "^0.560.0",
