@@ -3,6 +3,7 @@ import { z } from 'zod/v3';
 import { SettingsPage } from '@features/settings';
 
 export const Route = createFileRoute('/settings')({
+    ssr: false,
     validateSearch: z
         .object({
             tab: z.enum(['preferences', 'editor', 'analyzer', 'import', 'shortcuts']).optional(),

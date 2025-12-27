@@ -1,4 +1,4 @@
-import { queryClient } from '@/main';
+import { queryClient } from '@/queryClient';
 import type { Ino } from '@features/playground/types';
 import { writeFileContent } from '@features/playground/lib/fs-db';
 import { resolvePath, splitPath } from '@features/playground/store/file-system';

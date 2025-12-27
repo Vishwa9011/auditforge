@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { ContractImport } from '@/features/contract-import/components';
 
 export const Route = createFileRoute('/import')({
+    ssr: false,
     component: RouteComponent,
 });
 

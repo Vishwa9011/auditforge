@@ -10,6 +10,7 @@ import { Briefcase, Github, Globe, Mail, MapPin } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 export const Route = createFileRoute('/profile')({
+    ssr: false,
     component: RouteComponent,
 });
 
